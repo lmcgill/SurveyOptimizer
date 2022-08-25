@@ -8,7 +8,7 @@ This is the `species_value.csv` file in the `data` folder. Define species to use
 ### Current percent frequency (derived from empirical data) 
 This is the `species_pct_frequency.csv` file in the `data` folder.Percent frequency of occurrence for each species in each survey.  This can remain constant, or vary depending on proposed changes to spatial/seasonal coverage (e.g. to target recruitment events or move into deeper depths) 
 
-### Survey effort-CV power parameters (derived from empirical data?) 
+### Survey effort-CV power parameters (not sure how this is derived) 
 This is the `effort_cv_power_parameters.csv` file in the `data` folder. Values are survey and species specific. We use this dataframe to get the value `current_survey_cv`. Survey CV is  calculated a function of CURRENT sample size (i.e., it appears that CV does not change if optimized values are very different) using a power function (e.g., survey.species.cv = survey.sample.size ^ -survey.species.effort.power.parameter). 
 
 ### Current survey sample size (derived from empirical data) 
