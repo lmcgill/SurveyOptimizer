@@ -1,0 +1,191 @@
+﻿life_stage,group,species
+Adult,Amberjack,Almaco jack
+Adult,Amberjack,Banded rudderfish
+Adult,Amberjacks,Greater Amberjack
+Adult,Amberjacks,Lesser Amberjack
+Adult,CoastalPelagic,Cobia
+Adult,CoastalPelagic,Florida pompano 
+Adult,CoastalPelagic,King mackerel
+Adult,CoastalPelagic,Mullet
+Adult,CoastalPelagic,Spanish mackerel
+Adult,CoastalPelagic,Wahoo
+Adult,Deepwater snapper,Cubera snapper
+Adult,Deepwater snapper,Queen snapper
+Adult,Deepwater snapper,silk snapper
+Adult,Deepwater snapper,Wenchmen
+Adult,Groundfish,Atlantic croaker
+Adult,Groundfish,Black drum
+Adult,Groundfish,Gafftopsail catfish
+Adult,Groundfish,Gulf butterfish
+Adult,Groundfish,Gulf flounder
+Adult,Groundfish,Red Drum
+Adult,Groundfish,Sand sea trout
+Adult,Groundfish,Sheepshead
+Adult,Groundfish,Southern flounder
+Adult,Groundfish,Spotted croaker
+Adult,Groundfish,Spotted sea trout
+Adult,Grouper_ShallowReef_Fish,Black grouper
+Adult,Grouper_ShallowReef_Fish,Black sea bass 
+Adult,Grouper_ShallowReef_Fish,Gag grouper
+Adult,Grouper_ShallowReef_Fish,Goliath grouper
+Adult,Grouper_ShallowReef_Fish,Grey Snapper
+Adult,Grouper_ShallowReef_Fish,Grey Triggerfish
+Adult,Grouper_ShallowReef_Fish,Hogfish
+Adult,Grouper_ShallowReef_Fish,Lane snapper
+Adult,Grouper_ShallowReef_Fish,Mutton snapper
+Adult,Grouper_ShallowReef_Fish,Nassau grouper
+Adult,Grouper_ShallowReef_Fish,Red grouper
+Adult,Grouper_ShallowReef_Fish,Red Hind
+Adult,Grouper_ShallowReef_Fish,Red porgy 
+Adult,Grouper_ShallowReef_Fish,Red Snapper
+Adult,Grouper_ShallowReef_Fish,Rock hind
+Adult,Grouper_ShallowReef_Fish,Scamp Grouper
+Adult,Grouper_ShallowReef_Fish,Speckled hind 
+Adult,Grouper_ShallowReef_Fish,Vermilion snapper 
+Adult,Grouper_ShallowReef_Fish,White grunt
+Adult,Grouper_ShallowReef_Fish,Yellow mouth grouper
+Adult,Grouper_ShallowReef_Fish,Yellowedge grouper
+Adult,Grouper_ShallowReef_Fish,Yellowfin Grouper
+Adult,Grouper_ShallowReef_Fish,Yellowtail snapper 
+Adult,LarageCoastalSharks,Blacktip
+Adult,LarageCoastalSharks,Bull
+Adult,LarageCoastalSharks,Lemon
+Adult,LarageCoastalSharks,Nurse
+Adult,LarageCoastalSharks,Sandbar
+Adult,LarageCoastalSharks,Spinner
+Adult,LarageCoastalSharks,Tiger
+Adult,menhaden_baitfish,Pinfish
+Adult,Menhaden_baitfish  ,Anchovy
+Adult,Menhaden_baitfish  ,Atlantic thread herring
+Adult,Menhaden_baitfish  ,Flyingfish
+Adult,Menhaden_baitfish  ,Halfbeak
+Adult,Menhaden_baitfish  ,killifish
+Adult,Menhaden_baitfish  ,Menhaden
+Adult,Menhaden_baitfish  ,Round herring
+Adult,Menhaden_baitfish  ,scad
+Adult,Menhaden_baitfish  ,Scaled Sardine
+Adult,Menhaden_baitfish  ,silverside
+Adult,Menhaden_baitfish  ,Spanish sardine
+Adult,Shrimp_Crabs,Blue crab
+Adult,Shrimp_Crabs,Brown shrimp
+Adult,Shrimp_Crabs,Pink shrimp
+Adult,Shrimp_Crabs,White shrimp
+Adult,Small Pelagics,Blue runner
+Adult,Small Pelagics,Bluefish
+Adult,Small Pelagics,Bonito
+Adult,Small Pelagics,Crevalle jack
+Adult,Small Pelagics,Dolphinfish
+Adult,Small Pelagics,Little tunny
+Adult,Small Pelagics,Pompan Dolphinfish
+Adult,Small Pelagics,Rainbow runner
+Adult,SmallcoastalSharks,Blacknose
+Adult,SmallcoastalSharks,Bonnethead
+Adult,SmallcoastalSharks,Finetooth
+Adult,SmallcoastalSharks,Sharpnose
+Adult,Tilefish_Deepwater_Grouper,blueline tilefish
+Adult,Tilefish_Deepwater_Grouper,Calico grouper
+Adult,Tilefish_Deepwater_Grouper,Golden Tilefish
+Adult,Tilefish_Deepwater_Grouper,goldface tilefish
+Adult,Tilefish_Deepwater_Grouper,Misty Grouper
+Adult,Tilefish_Deepwater_Grouper,Snowy
+Adult,Tilefish_Deepwater_Grouper,Warsaw 
+Adult,Tuna,Bigeye Tuna
+Adult,Tuna,Blackfin Tuna
+Adult,Tuna,Bluefin Tuna
+Adult,Tuna,Skipjack Tuna
+,Tuna,Yellowfin Tuna
+Juvenille,Amberjack,Almaco jack
+Juvenille,Amberjack,Banded rudderfish
+Juvenille,Amberjacks,Greater Amberjack
+Juvenille,Amberjacks,Lesser Amberjack
+Juvenille,CoastalPelagic,Cobia
+Juvenille,CoastalPelagic,Florida pompano 
+Juvenille,CoastalPelagic,King mackerel
+Juvenille,CoastalPelagic,Mullet
+Juvenille,CoastalPelagic,Spanish mackerel
+Juvenille,CoastalPelagic,Wahoo
+Juvenille,Deepwater snapper,Cubera snapper
+Juvenille,Deepwater snapper,Queen snapper
+Juvenille,Deepwater snapper,silk snapper
+Juvenille,Deepwater snapper,Wenchmen
+Juvenille,Groundfish,Atlantic croaker
+Juvenille,Groundfish,Black drum
+Juvenille,Groundfish,Gafftopsail catfish
+Juvenille,Groundfish,Gulf butterfish
+Juvenille,Groundfish,Gulf flounder
+Juvenille,Groundfish,Red Drum
+Juvenille,Groundfish,Sand sea trout
+Juvenille,Groundfish,Sheepshead
+Juvenille,Groundfish,Southern flounder
+Juvenille,Groundfish,Spotted croaker
+Juvenille,Groundfish,Spotted sea trout
+Juvenille,Grouper_ShallowReef_Fish,Black grouper
+Juvenille,Grouper_ShallowReef_Fish,Black sea bass 
+Juvenille,Grouper_ShallowReef_Fish,Gag grouper
+Juvenille,Grouper_ShallowReef_Fish,Goliath grouper
+Juvenille,Grouper_ShallowReef_Fish,Grey Snapper
+Juvenille,Grouper_ShallowReef_Fish,Grey Triggerfish
+Juvenille,Grouper_ShallowReef_Fish,Hogfish
+Juvenille,Grouper_ShallowReef_Fish,Lane snapper
+Juvenille,Grouper_ShallowReef_Fish,Mutton snapper
+Juvenille,Grouper_ShallowReef_Fish,Nassau grouper
+Juvenille,Grouper_ShallowReef_Fish,Red grouper
+Juvenille,Grouper_ShallowReef_Fish,Red Hind
+Juvenille,Grouper_ShallowReef_Fish,Red porgy 
+Juvenille,Grouper_ShallowReef_Fish,Red Snapper
+Juvenille,Grouper_ShallowReef_Fish,Rock hind
+Juvenille,Grouper_ShallowReef_Fish,Scamp Grouper
+Juvenille,Grouper_ShallowReef_Fish,Speckled hind 
+Juvenille,Grouper_ShallowReef_Fish,Vermilion snapper 
+Juvenille,Grouper_ShallowReef_Fish,White grunt
+Juvenille,Grouper_ShallowReef_Fish,Yellow mouth grouper
+Juvenille,Grouper_ShallowReef_Fish,Yellowedge grouper
+Juvenille,Grouper_ShallowReef_Fish,Yellowfin Grouper
+Juvenille,Grouper_ShallowReef_Fish,Yellowtail snapper 
+Juvenille,LarageCoastalSharks,Blacktip
+Juvenille,LarageCoastalSharks,Bull
+Juvenille,LarageCoastalSharks,Lemon
+Juvenille,LarageCoastalSharks,Nurse
+Juvenille,LarageCoastalSharks,Sandbar
+Juvenille,LarageCoastalSharks,Spinner
+Juvenille,LarageCoastalSharks,Tiger
+Juvenille,menhaden_baitfish,Pinfish
+Juvenille,Menhaden_baitfish  ,Anchovy
+Juvenille,Menhaden_baitfish  ,Atlantic thread herring
+Juvenille,Menhaden_baitfish  ,Flyingfish
+Juvenille,Menhaden_baitfish  ,Halfbeak
+Juvenille,Menhaden_baitfish  ,killifish
+Juvenille,Menhaden_baitfish  ,Menhaden
+Juvenille,Menhaden_baitfish  ,Round herring
+Juvenille,Menhaden_baitfish  ,scad
+Juvenille,Menhaden_baitfish  ,Scaled Sardine
+Juvenille,Menhaden_baitfish  ,silverside
+Juvenille,Menhaden_baitfish  ,Spanish sardine
+Juvenille,Shrimp_Crabs,Blue crab
+Juvenille,Shrimp_Crabs,Brown shrimp
+Juvenille,Shrimp_Crabs,Pink shrimp
+Juvenille,Shrimp_Crabs,White shrimp
+Juvenille,Small Pelagics,Blue runner
+Juvenille,Small Pelagics,Bluefish
+Juvenille,Small Pelagics,Bonito
+Juvenille,Small Pelagics,Crevalle jack
+Juvenille,Small Pelagics,Dolphinfish
+Juvenille,Small Pelagics,Little tunny
+Juvenille,Small Pelagics,Pompan Dolphinfish
+Juvenille,Small Pelagics,Rainbow runner
+Juvenille,SmallcoastalSharks,Blacknose
+Juvenille,SmallcoastalSharks,Bonnethead
+Juvenille,SmallcoastalSharks,Finetooth
+Juvenille,SmallcoastalSharks,Sharpnose
+Juvenille,Tilefish_Deepwater_Grouper,blueline tilefish
+Juvenille,Tilefish_Deepwater_Grouper,Calico grouper
+Juvenille,Tilefish_Deepwater_Grouper,Golden Tilefish
+Juvenille,Tilefish_Deepwater_Grouper,goldface tilefish
+Juvenille,Tilefish_Deepwater_Grouper,Misty Grouper
+Juvenille,Tilefish_Deepwater_Grouper,Snowy
+Juvenille,Tilefish_Deepwater_Grouper,Warsaw 
+Juvenille,Tuna,Bigeye Tuna
+Juvenille,Tuna,Blackfin Tuna
+Juvenille,Tuna,Bluefin Tuna
+Juvenille,Tuna,Skipjack Tuna
+Juvenille,Tuna,Yellowfin Tuna
