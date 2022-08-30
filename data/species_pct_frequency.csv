@@ -1,4 +1,4 @@
-﻿species,Spring Trawl ,Fall Trawl,SEAMAP  BLL,NMFS BLL,Camera/Reef (ALL) ,Sum_Plank_Bongo,Sum_Plank_Neuston,Fall_Plank_Bongo,Fall_Plak_Neust,NMFS Small Pelagics,Group
+﻿species,spring_trawl,fall_trawl,seamap_bll,nmfs_bll,camera_reef,sum_plank_bongo,sum_plan_neuston,fall_plank_bongo,fall_plank_neust,nmfs_small_pelagics,Group
 Almaco jack,,,0,0.0015,,,,,,,Amberjacks
 Banded rudderfish,,,,,,,,,,,Amberjacks
 Greater Amberjack,,,,0.0077,,,,,,,Amberjacks
@@ -71,7 +71,7 @@ Brown shrimp,0.4827,0.57391,,,0,,,,,0.19918,Shrimp_Crabs
 Pink shrimp,0.21099,0.15865,,,0,,,,,0.00887,Shrimp_Crabs
 White shrimp,0.16788,0.20199,,,0,,,,,0.00273,Shrimp_Crabs
 Blue runner,,,,,,,,,,,Small Pelagics
-Bluefish,,0.01127,0.001850709,0.0018,6.9633E-05,,,,,0.03547,Small Pelagics
+Bluefish,,0.01127,0.001850709,0.0018,6.96E-05,,,,,0.03547,Small Pelagics
 Bonito,0,0,0.000616903,0.0003,0,,,,,0,Small Pelagics
 Crevalle jack,,,0.014805676,0.0012,0.002158624,,,,,,Small Pelagics
 Dolphinfish,,,0.001233806,0.0059,,,,,,,Small Pelagics
@@ -156,7 +156,7 @@ Flyingfish,0.0003,0,0,0,0,0,0,0,0,0.00068,Menhaden_baitfish
 Halfbeak,0,0,0,0,0,0,0,0,0,0,Menhaden_baitfish  
 killifish,0,0,0,0,0,0,0,0,0,0,Menhaden_baitfish  
 Menhaden,0.03522,0.06372,0,0,0,0,0,0,0,0.00546,Menhaden_baitfish  
-Round herring,0.02641,0.01517,0,0,6.9633E-05,0,0,0,0,0.15825,Menhaden_baitfish  
+Round herring,0.02641,0.01517,0,0,6.96E-05,0,0,0,0,0.15825,Menhaden_baitfish  
 scad,,,,,0.003342386,,,,,,Menhaden_baitfish  
 Scaled Sardine,,,0,0,0,0,0,0,0,,Menhaden_baitfish  
 silverside,0,0,0,0,0,0,0,0,0,0,Menhaden_baitfish  

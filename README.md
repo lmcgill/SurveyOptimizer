@@ -11,5 +11,5 @@ This is the `species_pct_frequency.csv` file in the `data` folder.Percent freque
 ### Survey effort-CV power parameters (not sure how this is derived) 
 This is the `effort_cv_power_parameters.csv` file in the `data` folder. Values are survey and species specific. We use this dataframe to get the value `current_survey_cv`. Survey CV is  calculated a function of CURRENT sample size (i.e., it appears that CV does not change if optimized values are very different) using a power function (e.g., survey.species.cv = survey.sample.size ^ -survey.species.effort.power.parameter). 
 
-### Current survey sample size (derived from empirical data) 
-This is the `current_survey_size.csv` file in the `data` folder. Values are survey specific. We use this dataframe to get the value `current_survey_cv`. 
+### Current survey sample size + other parameters (derived from empirical data) 
+This is the `current_survey_size.csv` file in the `data` folder. Values are survey specific. We use this dataframe to get the value `current_survey_cv`. This file also contains the cost-per-survey and maximum size of a given survey, both of which can be used for later optimization constraints. 
