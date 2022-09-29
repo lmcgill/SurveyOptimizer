@@ -1,0 +1,191 @@
+﻿species,life_stage,spring_trawl,fall_trawl,seamap_bll,nmfs_bll,camera_reef,sum_plank_bongo,sum_plan_neuston,fall_plank_bongo,fall_plank_neust,nmfs_small_pelagics,Group
+Almaco jack,Adult,,,0,0.0015,,,,,,,Amberjacks
+Banded rudderfish,Adult,,,,,,,,,,,Amberjacks
+Greater Amberjack,Adult,,,,0.0077,,,,,,,Amberjacks
+Lesser Amberjack,Adult,,,0,0.0003,0.022212938,,,,,0.00273,Amberjacks
+Cobia,Adult,,,0.01172116,0.0074,0.003272753,,,,,0.00477,CoastalPelagic
+Florida pompano ,Adult,0.00213,0.01344,,,,,,,,0.00341,CoastalPelagic
+King mackerel,Adult,,,0.001233806,0.0038,0.001114129,,,,,,CoastalPelagic
+Mullet,Adult,,,,,,,,,,,CoastalPelagic
+Spanish mackerel,Adult,,,0.004935225,0.0003,0.000417798,,,,,,CoastalPelagic
+Wahoo,Adult,0,0,0,0.0012,0,,,,,0,CoastalPelagic
+Cubera snapper,Adult,0,0,0,0,0,,,,,0,Deepwater snapper
+Queen snapper,Adult,,0,0,0.0012,0.001253395,,,,,0,Deepwater snapper
+silk snapper,Adult,0.00091,0.00087,0,0,0.002506789,,,,,0,Deepwater snapper
+Wenchmen,Adult,0,0,0,0,0,,,,,0,Deepwater snapper
+Atlantic croaker,Adult,,,,,0,,,,,,Groundfish
+Black drum,Adult,0,0,0,0,0,,,,,0,Groundfish
+Gafftopsail catfish,Adult,,,0.285626157,0.0346,,,,,,,Groundfish
+Gulf butterfish,Adult,0.35792,0.37841,0,0,0,,,,,0.38404,Groundfish
+Gulf flounder,Adult,0,0,0,0,0,,,,,0,Groundfish
+Red Drum,Adult,0.00121,0.00954,,0.0121,0,,,,,0,Groundfish
+Sand sea trout,Adult,,0.3225,,,,,,,,0.22442,Groundfish
+Sheepshead,Adult,,,,,0.019706149,,,,,,Groundfish
+Southern flounder,Adult,0.04189,0.07152,0,0,0,,,,,0.05252,Groundfish
+Spotted croaker,Adult,0.18427,0.40139,0,0,0.001183762,,,,,0.0955,Groundfish
+Spotted sea trout,Adult,0.00121,,,,,,,,,,Groundfish
+Black grouper,Adult,0,0,0,0.0006,0.005013578,,,,,0,Grouper_ShallowReef_Fish
+Black sea bass ,Adult,0.01761,0.01647,,,0.04428661,,,,,,Grouper_ShallowReef_Fish
+Gag grouper,Adult,,,,,,,,,,0.00205,Grouper_ShallowReef_Fish
+Goliath grouper,Adult,0.00121,0.0013,0,,0.003551285,,,,,0,Grouper_ShallowReef_Fish
+Grey Snapper,Adult,0.08956,0.06329,0,0.0027,0.174639649,,,,,0.01432,Grouper_ShallowReef_Fish
+Grey Triggerfish,Adult,0.10808,,,,0.200264606,,,,,0.04093,Grouper_ShallowReef_Fish
+Hogfish,Adult,0,0,0,0,0,,,,,0,Grouper_ShallowReef_Fish
+Lane snapper,Adult,0.22647,0.34417,0.000616903,0.0009,0.138221572,,,,,0.06207,Grouper_ShallowReef_Fish
+Mutton snapper,Adult,0.00152,,0,0.0018,0.027853214,,,,,0.00205,Grouper_ShallowReef_Fish
+Nassau grouper,Adult,0,0,0,0,0.000208899,,,,,0,Grouper_ShallowReef_Fish
+Red grouper,Adult,,,,,,,,,,0.00205,Grouper_ShallowReef_Fish
+Red Hind,Adult,0.0003,,0,0,0.002785321,,,,,0,Grouper_ShallowReef_Fish
+Red porgy ,Adult,,,,0.0009,,,,,,,Grouper_ShallowReef_Fish
+Red Snapper,Adult,,,0.058605799,0.1132,0.331313975,,,,,,Grouper_ShallowReef_Fish
+Rock hind,Adult,0,0,0,0,0.009330827,,,,,0,Grouper_ShallowReef_Fish
+Scamp Grouper,Adult,,,0.000616903,0.0086,0.213007451,,,,,0.00136,Grouper_ShallowReef_Fish
+Speckled hind ,Adult,,,,0.0056,0.004247615,,,,,0.00068,Grouper_ShallowReef_Fish
+Vermilion snapper ,Adult,,,,,,,,,,,Grouper_ShallowReef_Fish
+White grunt,Adult,0.07923,0.06285,0,0.0003,0.046793399,,,,,0.00068,Grouper_ShallowReef_Fish
+Yellowmouth grouper,Adult,0,,0,0.0003,0.020402479,,,,,0,Grouper_ShallowReef_Fish
+Yellowedge grouper,Adult,0,0.0013,0,0.0003,0,,,,,,Grouper_ShallowReef_Fish
+Yellowfin Grouper,Adult,,0,0,0,0.002576422,,,,,0,Grouper_ShallowReef_Fish
+Yellowtail snapper ,Adult,,,,,,,,,,0.00273,Grouper_ShallowReef_Fish
+Blacktip,Adult,,,,,0.000417798,,,,,,LarageCoastalSharks
+Bull,Adult,0,0,0,0,0,,,,,0,LarageCoastalSharks
+Lemon,Adult,0,0,0.014188772,0.005,0.000348165,,,,,0,LarageCoastalSharks
+Nurse,Adult,,0.0013,,,,,,,,,LarageCoastalSharks
+Sandbar,Adult,,,,0.1674,0.00299422,,,,,0.00205,LarageCoastalSharks
+Spinner,Adult,,,,,,,,,,,LarageCoastalSharks
+Tiger,Adult,,,,,,,,,,0,LarageCoastalSharks
+Pinfish,Adult,0.34578,0.42393,0,0.0027,0.020611378,,,,,0.26057,Menhaden_baitfish  
+Anchovy,Adult,0.02914,0.02297,0,0,0,,,,,0.00136,Menhaden_baitfish  
+Atlantic thread herring,Adult,0.11566,0.13437,0.000616903,0,0,,,,,0.01637,Menhaden_baitfish  
+Flyingfish,Adult,,0,0,0,0,,,,,0.00068,Menhaden_baitfish  
+Halfbeak,Adult,0,0,0,0,0,,,,,0,Menhaden_baitfish  
+killifish,Adult,0,0,0,0,0,,,,,0,Menhaden_baitfish  
+Menhaden,Adult,0.03522,0.06372,,,,,,,,0.00546,Menhaden_baitfish  
+Round herring,Adult,,,,,,,,,,,Menhaden_baitfish  
+scad,Adult,0.10322,0.08843,0,0,0.003342386,,,,,0.07981,Menhaden_baitfish  
+Scaled Sardine,Adult,0.11688,0.18682,0,0,0,,,,,0.01296,Menhaden_baitfish  
+silverside,Adult,0,0,0,0,0,,,,,0,Menhaden_baitfish  
+Spanish sardine,Adult,0.08227,0.07586,0,0,0.000417798,,,,,0.03138,Menhaden_baitfish  
+Blue crab,Adult,0.16211,0.08106,,,0,,,,,0.00341,Shrimp_Crabs
+Brown shrimp,Adult,0.4827,0.57391,,,0,,,,,0.19918,Shrimp_Crabs
+Pink shrimp,Adult,0.21099,0.15865,,,0,,,,,0.00887,Shrimp_Crabs
+White shrimp,Adult,0.16788,0.20199,,,0,,,,,0.00273,Shrimp_Crabs
+Blue runner,Adult,,,,,,,,,,,Small Pelagics
+Bluefish,Adult,,0.01127,0.001850709,0.0018,6.96E-05,,,,,0.03547,Small Pelagics
+Bonito,Adult,0,0,0.000616903,0.0003,0,,,,,0,Small Pelagics
+Crevalle jack,Adult,,,0.014805676,0.0012,0.002158624,,,,,,Small Pelagics
+Dolphinfish,Adult,,,0.001233806,0.0059,,,,,,,Small Pelagics
+Little tunny,Adult,,,0.001850709,0.0012,0.010723487,,,,,0,Small Pelagics
+Pompan Dolphinfish,Adult,0,0,0,0,0,,,,,0.00068,Small Pelagics
+Rainbow runner,Adult,,,,,,,,,,0.00136,Small Pelagics
+Blacknose,Adult,0.01791,,,,,,,,,,SmallcoastalSharks
+Bonnethead,Adult,0.01245,,0.019123998,0.0068,0.000139266,,,,,0.00819,SmallcoastalSharks
+Finetooth,Adult,,,,0.0044,,,,,,,SmallcoastalSharks
+Sharpnose,Adult,,,,0.4979,,,,,,,SmallcoastalSharks
+blueline tilefish,Adult,,0,0,0.013,0.00389945,,,,,0.00068,Tilefish_Deepwater_Grouper
+Calico grouper,Adult,0.0003,0,0,0.0056,0,,,,,0.00068,Tilefish_Deepwater_Grouper
+Golden Tilefish,Adult,0,0.00173,0.000616903,0.0571,0,,,,,0.00819,Tilefish_Deepwater_Grouper
+goldface tilefish,Adult,0.00121,0.00173,0,0,0.015110368,,,,,0.00887,Tilefish_Deepwater_Grouper
+Misty Grouper,Adult,0,0,0,0,0,,,,,0,Tilefish_Deepwater_Grouper
+Snowy,Adult,0.00152,0.00303,0,0.0089,0.00069633,,,,,0.00273,Tilefish_Deepwater_Grouper
+Warsaw ,Adult,,,,,0.000278532,,,,,0.00205,Tilefish_Deepwater_Grouper
+Bigeye Tuna,Adult,0,0,0,0,0,,,,,0,Tuna
+Blackfin Tuna,Adult,0,0,0.001233806,0.0015,0,,,,,0,Tuna
+Bluefin Tuna,Adult,0,0,0,,0,,,,,0,Tuna
+Skipjack Tuna,Adult,0,0,0,0,0,,,,,0,Tuna
+Yellowfin Tuna,Adult,0,0,0,0.0003,0,,,,,0,Tuna
+Almaco jack,Juvenille,0.00213,0.0026,0,,0.135923682,0,0,0,0,0.00136,Amberjacks
+Banded rudderfish,Juvenille,0.01275,0,0,0,0.010514588,0,0,0,0,0.00409,Amberjacks
+Greater Amberjack,Juvenille,0.01882,0.0078,0.001850709,,0.164403593,0,0,0,0,0.02456,Amberjacks
+Lesser Amberjack,Juvenille,0.00061,0.00043,,,,0,0,0,0,,Amberjacks
+Cobia,Juvenille,0.00334,0.0143,,,,0.00682,0.00867,0.00528,0.03138,,CoastalPelagic
+Florida pompano ,Juvenille,,,,,,,,,,,CoastalPelagic
+King mackerel,Juvenille,0.01609,0.04205,,,0.001114129,0.01091,0.01255,0.25963,0.14734,0.05184,CoastalPelagic
+Mullet,Juvenille,0.0003,0.0013,0,0,0,0,0,0,0,0,CoastalPelagic
+Spanish mackerel,Juvenille,0.02338,0.04725,,,,0.00546,0.0105,0.14783,0.09952,0.01705,CoastalPelagic
+Wahoo,Juvenille,0,0,0,,0,0,0,0,0,0,CoastalPelagic
+Cubera snapper,Juvenille,0,0,0,0,0,0,0,0,0,0,Deepwater snapper
+Queen snapper,Juvenille,0.0003,,,,,0,0,0,0,0,Deepwater snapper
+silk snapper,Juvenille,0.00091,0.00087,0,0,0.002506789,0,0,0,0,0,Deepwater snapper
+Wenchmen,Juvenille,0,0,0,0,0,0,0,0,0,0,Deepwater snapper
+Atlantic croaker,Juvenille,0.33758,0.56654,0.001233806,0.0015,0,0,0,0,0,0.1528,Groundfish
+Black drum,Juvenille,0,0,0,0,0,0,0,0,0,0,Groundfish
+Gafftopsail catfish,Juvenille,0.01579,0.07456,,,,,,,,,Groundfish
+Gulf butterfish,Juvenille,,,0,0,0,0,0,0,0,,Groundfish
+Gulf flounder,Juvenille,0,0,0,0,0,0,0,0,0,0,Groundfish
+Red Drum,Juvenille,,,0.256631709,,0,0,0.00023,0.16429,0.10968,0,Groundfish
+Sand sea trout,Juvenille,0.23133,,0.003701419,0.0018,,,,,,0.22442,Groundfish
+Sheepshead,Juvenille,0.00304,0.00173,,,,,,,,,Groundfish
+Southern flounder,Juvenille,0.04189,0.07152,0,0,0,0,0,0,0,0.05252,Groundfish
+Spotted croaker,Juvenille,0.18427,0.40139,0,0,0.001183762,0,0,0,0,0.0955,Groundfish
+Spotted sea trout,Juvenille,,,,,,,,,,,Groundfish
+Black grouper,Juvenille,0,0,0,,,0,0,0,0,0,Grouper_ShallowReef_Fish
+Black sea bass ,Juvenille,,,,0.0086,,,,,,,Grouper_ShallowReef_Fish
+Gag grouper,Juvenille,0.0088,0.0052,0,0.0136,0.073602117,0,0,0,0,,Grouper_ShallowReef_Fish
+Goliath grouper,Juvenille,,,,0.0006,0.003551285,,,,,,Grouper_ShallowReef_Fish
+Grey Snapper,Juvenille,,,,,,0,0,0.03561,0.0158,,Grouper_ShallowReef_Fish
+Grey Triggerfish,Juvenille,,0.18639,,,,0.00254,0.01409,0.02978,0.12892,,Grouper_ShallowReef_Fish
+Hogfish,Juvenille,0,0,0,0,0,0,0,0,0,0,Grouper_ShallowReef_Fish
+Lane snapper,Juvenille,,,,,,,,,,,Grouper_ShallowReef_Fish
+Mutton snapper,Juvenille,,0.0013,,,,,,,,,Grouper_ShallowReef_Fish
+Nassau grouper,Juvenille,,,,,,,,,,,Grouper_ShallowReef_Fish
+Red grouper,Juvenille,0.1014,0.05592,0,0.0911,0.220527818,0,0,0,0,0.00205,Grouper_ShallowReef_Fish
+Red Hind,Juvenille,,0.00043,0,0,0.002785321,0,0,0,0,0,Grouper_ShallowReef_Fish
+Red porgy ,Juvenille,0.07347,0.05765,0,,0.277766172,0,0,0,0,0.06412,Grouper_ShallowReef_Fish
+Red Snapper,Juvenille,0.2708,0.50022,,,,0,0,0.12174,0.08669,0.17258,Grouper_ShallowReef_Fish
+Rock hind,Juvenille,,,,,,,,,,,Grouper_ShallowReef_Fish
+Scamp Grouper,Juvenille,0.01821,0.0065,,,,,,,,,Grouper_ShallowReef_Fish
+Speckled hind ,Juvenille,0.0003,,,,,,,,,,Grouper_ShallowReef_Fish
+Vermilion snapper ,Juvenille,0.16029,0.14651,0,0.0033,0.246222408,0,0,0.26924,0.14655,0.16576,Grouper_ShallowReef_Fish
+White grunt,Juvenille,,,,,,,,,,,Grouper_ShallowReef_Fish
+Yellowmouth grouper,Juvenille,0,0.0013,0,,,0,0,0,0,0,Grouper_ShallowReef_Fish
+Yellowedge grouper,Juvenille,0,0.0013,0,0.0003,0,0,0,0,0,0,Grouper_ShallowReef_Fish
+Yellowfin Grouper,Juvenille,0.0003,0,0,0,0.002576422,0,0,0,0,0,Grouper_ShallowReef_Fish
+Yellowtail snapper ,Juvenille,0.01518,0.00737,0,0,0.04567927,0,0,0,0,,Grouper_ShallowReef_Fish
+Blacktip,Juvenille,0.00395,0.0013,0.526218384,0.1399,,,,,,,LarageCoastalSharks
+Bull,Juvenille,0,0,0,0,0,0,0,0,0,0,LarageCoastalSharks
+Lemon,Juvenille,,,,,,0,0,0,0,0,LarageCoastalSharks
+Nurse,Juvenille,0.00334,,0.004318322,0.0656,0.005222478,0,0,0,0,0.00205,LarageCoastalSharks
+Sandbar,Juvenille,0.0003,,0.032078964,,,,,,,,LarageCoastalSharks
+Spinner,Juvenille,0.00061,0.00087,0.185070944,0.0659,0.000278532,0,0,0,0,0,LarageCoastalSharks
+Tiger,Juvenille,0,0,0.040715608,0.1425,0.00069633,0,0,0,0,0,LarageCoastalSharks
+Pinfish,Juvenille,,,,,,0,0,0,0,0.26057,Menhaden_baitfish  
+Anchovy,Juvenille,,,,,,,,,,,Menhaden_baitfish  
+Atlantic thread herring,Juvenille,,,,,,,,,,,Menhaden_baitfish  
+Flyingfish,Juvenille,0.0003,0,0,0,0,0,0,0,0,0.00068,Menhaden_baitfish  
+Halfbeak,Juvenille,0,0,0,0,0,0,0,0,0,0,Menhaden_baitfish  
+killifish,Juvenille,0,0,0,0,0,0,0,0,0,0,Menhaden_baitfish  
+Menhaden,Juvenille,0.03522,0.06372,0,0,0,0,0,0,0,0.00546,Menhaden_baitfish  
+Round herring,Juvenille,0.02641,0.01517,0,0,6.96E-05,0,0,0,0,0.15825,Menhaden_baitfish  
+scad,Juvenille,,,,,0.003342386,,,,,,Menhaden_baitfish  
+Scaled Sardine,Juvenille,,,0,0,0,0,0,0,0,,Menhaden_baitfish  
+silverside,Juvenille,0,0,0,0,0,0,0,0,0,0,Menhaden_baitfish  
+Spanish sardine,Juvenille,,,0,0,0.000417798,0,0,0,0,,Menhaden_baitfish  
+Blue crab,Juvenille,0.16211,0.08106,0.001233806,0,0,0,0,0,0,0.00341,Shrimp_Crabs
+Brown shrimp,Juvenille,0.4827,0.57391,0,0,0,0,0,0,0,0.19918,Shrimp_Crabs
+Pink shrimp,Juvenille,0.21099,0.15865,0,0,0,0,0,0,0,0.00887,Shrimp_Crabs
+White shrimp,Juvenille,0.16788,0.20199,0,0,0,0,0,0,0,0.00273,Shrimp_Crabs
+Blue runner,Juvenille,0.03005,0.15475,0,0,0.105563679,0,0,0,0,0.03411,Small Pelagics
+Bluefish,Juvenille,0.00789,,,,,,,,,,Small Pelagics
+Bonito,Juvenille,0,0,,,0,0,0.00046,0.00062,0,0,Small Pelagics
+Crevalle jack,Juvenille,0.00425,0.0104,,,,,,,,0.00546,Small Pelagics
+Dolphinfish,Juvenille,0.00061,,,,,0.04773,0.27186,0.01304,0.10729,0.00205,Small Pelagics
+Little tunny,Juvenille,0,0,,,0.010723487,0.06853,0.04542,0.30466,0.16886,0,Small Pelagics
+Pompan Dolphinfish,Juvenille,0,0,0,0,0,0.00409,0.10089,0.00093,0.01973,0.00068,Small Pelagics
+Rainbow runner,Juvenille,,,,,0.000557064,,,,,,Small Pelagics
+Blacknose,Juvenille,0.01791,0.00867,0.103022825,0.2197,0.00069633,0,0,0,0,0.01091,SmallcoastalSharks
+Bonnethead,Juvenille,,0.04768,,,,,,,,,SmallcoastalSharks
+Finetooth,Juvenille,,,0.091918569,,,,,,,,SmallcoastalSharks
+Sharpnose,Juvenille,0.05313,0.04941,0.560148057,,0,0,0,0,0,0.11869,SmallcoastalSharks
+blueline tilefish,Juvenille,0.0003,,,,,,,,,,Tilefish_Deepwater_Grouper
+Calico grouper,Juvenille,0.0003,0,0,0.0056,0,0,0,0,0,0.00068,Tilefish_Deepwater_Grouper
+Golden Tilefish,Juvenille,0,0.00173,0.000616903,0.0571,0,0,0,0,0,0.00819,Tilefish_Deepwater_Grouper
+goldface tilefish,Juvenille,,,,,,,,,,,Tilefish_Deepwater_Grouper
+Misty Grouper,Juvenille,0,0,0,0,0,0,0,0,0,0,Tilefish_Deepwater_Grouper
+Snowy,Juvenille,0.00152,0.00303,0,0.0089,,0,0,0,0,0.00273,Tilefish_Deepwater_Grouper
+Warsaw ,Juvenille,0.0003,0.00087,0,0.0092,,0,0,0,0,0.00205,Tilefish_Deepwater_Grouper
+Bigeye Tuna,Juvenille,0,0,0,0,0,0,0,0,0,0,Tuna
+Blackfin Tuna,Juvenille,0,0,,,0,0,0,0,0,0,Tuna
+Bluefin Tuna,Juvenille,0,0,0,0.0003,0,0.13502,0.11824,0,0,0,Tuna
+Skipjack Tuna,Juvenille,0,0,0,0,0,0.27378,0.12235,0.08043,0.03377,0,Tuna
+Yellowfin Tuna,Juvenille,0,0,0,0.0003,0,0,0,0,0,0,Tuna
