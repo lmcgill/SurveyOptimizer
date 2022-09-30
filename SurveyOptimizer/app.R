@@ -62,7 +62,7 @@ ui = bootstrapPage(
                                      selectInput("parameter_name", NULL, c("Objective Criteria","Species to Include","Species Valuation"), selected = "Objective Criteria")                            ),
                             tabPanel("Constraints", value = "constraints",
                                      tags$br(),
-                                     selectInput("constraint_name", NULL, c("Survey Size","Survey Money","Totals"), selected = "Survey Size")                            )
+                                     selectInput("constraint_name", NULL, c("Survey Size","Totals"), selected = "Survey Size")                            )
                           ),
                           width = 5
                         ),
@@ -76,11 +76,23 @@ ui = bootstrapPage(
                               DT::dataTableOutput('x3'),
                               
                             ),
+                            conditionalPanel(
+                              condition = "input.selected_tab == 'parameters' & input.parameter_name == 'Species Valuation'",
+                              
+                              DT::dataTableOutput('x1'),
+                              
+                            ),
                             
                             conditionalPanel(
                               condition = "input.selected_tab == 'constraints' & input.constraint_name == 'Survey Size'",
                               
                               DT::dataTableOutput('x2')
+                            ),
+                            
+                            conditionalPanel(
+                              condition = "input.selected_tab == 'constraints' & input.constraint_name == 'Totals'",
+                              
+                              DT::dataTableOutput('x4')
                             ),
 
                         width = 7
@@ -98,14 +110,6 @@ ui = bootstrapPage(
                                     cellWidths = c("40%", "60%"))
                       )),
              
-                      # mainPanel(
-                      #   span(tags$i(h6("Below are the optimzed survey sizes and current survey sizes, given the
-                      #                   parameters specified on the 'Data Options' tab.")), style="color:#045a8d"),
-                      # 
-                      #   DT::dataTableOutput("optimized.solution"),
-                      #   plotOutput("optimized.solution.plot", height=800)
-                      # 
-                      # )),
              tabPanel("Plot and Save"), 
              tabPanel("Compare Scenarios")
              
@@ -115,21 +119,42 @@ ui = bootstrapPage(
 # Define server logic required to draw a histogram
 server <- function(input, output, session) {
     
-  ## This will create the original data frame that is rendered on the table to start 
+  ## This will create the original objective weights data frame that is rendered on the table to start 
   objective.weights = data.frame(values = c("commercial_value","recreational_value","ecosystem_value",
                                             "management_importantce",	"uniqueness"), 
                                  weights = c(1,1,1,1,1))
   
+  ## This will create the original upper/ lower bounds data frame that is rendered on the table to start 
   bounds = data.frame(values =c("spring_trawl", "fall_trawl", "seamap_bll", "nmfs_bll", "camera_reef", "sum_plank_bongo",
                                          "sum_plan_neuston", "fall_plank_bongo", "fall_plank_neust", "nmfs_small_pelagics"), 
                        lower.bound =  c(0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
                        upper.bound = c(346, 302, 160, 165, 1494, 56, 56, 72, 72, 122))
   
+  ## This will create the original species valuation data frame that is rendered on the table to start 
+  species.value = read.csv("data/species_value.csv") %>% 
+    dplyr::select(-include)
+  
+  ## This will create the total parameter $$ / amount 
+  totals = data.frame(values = c("Total Cost","Total Survey Number"), 
+                      totals = c(6866963, 2590))
+  
+  
+  ##################################################################################################################################################
+  # Reactive values for input 
+  ##################################################################################################################################################
+  
+  # New, reactive elements 
   bounds.new <- reactiveValues(data = bounds)
   bounds.original <- bounds
   
   objective.weights.new <- reactiveValues(data = objective.weights)
   objective.weights.original <- objective.weights
+  
+  species.value.new = reactiveValues(data=species.value)
+  species.value.original = species.value
+  
+  totals.new = reactiveValues(data=totals)
+  totals.original = totals
   
   # This renders the datatable on the first page
   output$x2<-renderDT(
@@ -141,43 +166,93 @@ server <- function(input, output, session) {
   # This updates and saves the new data 
   observeEvent(input$x2_cell_edit, {
     req(input$x2_cell_edit)
-    bounds[input$x2_cell_edit$row,input$x2_cell_edit$col] <<- input$x2_cell_edit$value
+    
+    # If you have a non-numeric edit, it messes up the optimization routine unless this is added (switches empties/character to zeros)
+    cell.edit.value = input$x2_cell_edit$value
+    if(is.numeric(cell.edit.value) == FALSE){cell.edit.value = 0}
+    
+    # Replace values with user input
+    bounds[input$x2_cell_edit$row,input$x2_cell_edit$col] <<- cell.edit.value
     bounds.new$data <- bounds
   })
   
-  
-  # This is the output that will show on the App 
-  # output$x2<-renderDT(
-  #   bounds.new$data,selection = 'none', editable = TRUE,
-  #   rownames = TRUE)
-  
+  # This renders the datatable on the first page
   output$x3 <- renderDT(
     objective.weights.new$data,
     selection = 'none',
     editable = TRUE,
     rownames = TRUE)
   
-  
-  # This is trying to save the new dataframe to be used in later optimization routines 
   # This updates and saves the new data 
   observeEvent(input$x3_cell_edit, {
     req(input$x3_cell_edit)
-    objective.weights[input$x3_cell_edit$row,input$x3_cell_edit$col] <<- input$x3_cell_edit$value
+    
+    # If you have a non-numeric edit, it messes up the optimization routine unless this is added (switches empties/character to zeros)
+    cell.edit.value = input$x3_cell_edit$value
+    if(is.numeric(cell.edit.value) == FALSE){cell.edit.value = 0}
+    
+    # Replace values with user input
+    objective.weights[input$x3_cell_edit$row,input$x3_cell_edit$col] <<- cell.edit.value
     objective.weights.new$data <- objective.weights
   })
   
+  # This renders the datatable on the first page
+  output$x1 <- renderDT(
+    species.value.new$data,
+    selection = 'none',
+    editable = TRUE,
+    rownames = TRUE)
+  
+  # This updates and saves the new data 
+  observeEvent(input$x1_cell_edit, {
+    req(input$x1_cell_edit)
+    
+    # If you have a non-numeric edit, it messes up the optimization routine unless this is added (switches empties/character to zeros)
+    cell.edit.value = input$x1_cell_edit$value
+    if(is.numeric(cell.edit.value) == FALSE){cell.edit.value = 0}
+    
+    # Replace values with user input
+    species.value[input$x1_cell_edit$row,input$x1_cell_edit$col] <<- cell.edit.value
+    species.value.new$data <- species.value
+  })
+  
+  
+  # This renders the datatable on the first page
+  output$x4 <- renderDT(
+    totals.new$data,
+    selection = 'none',
+    editable = TRUE,
+    rownames = TRUE)
+  
+  # This updates and saves the new data 
+  observeEvent(input$x4_cell_edit, {
+    req(input$x4_cell_edit)
+    
+    # If you have a non-numeric edit, it messes up the optimization routine unless this is added (switches empties/character to zeros)
+    cell.edit.value = input$x4_cell_edit$value
+    if(is.numeric(cell.edit.value) == FALSE){cell.edit.value = 0}
+    
+    # Replace values with user input
+    totals[input$x4_cell_edit$row,input$x4_cell_edit$col] <<- cell.edit.value
+    totals.new$data <- totals
+  })
+  
+  ##################################################################################################################################################
+  # Getting data/ running optimization 
+  ##################################################################################################################################################
+  
   optimized.data <- reactive({
     
-    # Get the objective weights 
-    objective.weights.new = data.frame(objective.weights.new$data)
+    # Get the necesary parameters from reactive data 
+    objective.weights.new = data.frame(objective.weights.new$data) 
     upper.bound = data.frame(bounds.new$data)$upper.bound
     lower.bound = data.frame(bounds.new$data)$lower.bound
+    species.value.new = data.frame(species.value.new$data) 
+    max.cost =  data.frame(totals.new$data)[1,2]
+    max.capacity = data.frame(totals.new$data)[2,2]
     
-
-    # Read in a table of species value (or use default values provided by Joel) 
-    species.value = read.csv("data/species_value.csv")
     # Calculate the weighted average for each species 
-    species.value = species.value %>% 
+    survey.value = species.value.new %>% 
       dplyr::mutate(species = tolower(species)) %>% 
       dplyr::mutate(commercial_value = commercial_value * objective.weights.new$weights[objective.weights.new$values == "commercial_value"], 
                     recreational_value = recreational_value * objective.weights.new$weights[objective.weights.new$values == "recreational_value"], 
@@ -185,7 +260,7 @@ server <- function(input, output, session) {
                     management_importantce = management_importantce * objective.weights.new$weights[objective.weights.new$values == "management_importantce"], 
                     uniqueness = uniqueness * objective.weights.new$weights[objective.weights.new$values == "uniqueness"]) %>% 
       dplyr::rowwise() %>% 
-      dplyr::mutate(total_value = (sum(commercial_value, recreational_value, ecosystem_value, management_importantce, uniqueness) * include)/sum(objective.weights.new$weights)) %>%  
+      dplyr::mutate(total_value = (sum(commercial_value, recreational_value, ecosystem_value, management_importantce, uniqueness))/sum(objective.weights.new$weights)) %>%  
       dplyr::ungroup()
     
     # The %Freq_{species, survey} is determined by data that does not change 
@@ -194,13 +269,13 @@ server <- function(input, output, session) {
     # Replace all NA values with 0 (NAs are the empty cells from the excel sheet)
     species.survey.freq[is.na(species.survey.freq)] = 0
     
-    # Open power parameter folder 
+    # Open power parameter file 
     species.survey.power = read.csv("data/species_power_parameter.csv") %>% 
       dplyr::mutate(species = tolower(species)) %>% 
       gather("survey","power_param",-c(species, life_stage, Group))
     
     # Now we want to calculate the %Freq_{species, survey} * Value_{species}
-    species.survey.freq.value = left_join(species.survey.freq, species.value[, c("species", "life_stage","total_value")], by=c("species", "life_stage")) %>% 
+    species.survey.freq.value = left_join(species.survey.freq, survey.value[, c("species", "life_stage","total_value")], by=c("species", "life_stage")) %>% 
       gather("survey","pct_freq",-c(species, life_stage, Group, total_value)) %>% 
       left_join(., species.survey.power, by=c("species", "life_stage", "Group", "survey")) %>% 
       dplyr::mutate(freq_value = total_value * pct_freq) %>% 
@@ -210,21 +285,15 @@ server <- function(input, output, session) {
     survey.names = c("spring_trawl", "fall_trawl", "seamap_bll", "nmfs_bll", "camera_reef", "sum_plank_bongo",
                      "sum_plan_neuston", "fall_plank_bongo", "fall_plank_neust", "nmfs_small_pelagics")
     survey.size.current = c(315, 275, 146, 150, 1359, 51, 51, 66, 66, 111)
-    survey.n = c(2, 2, 2, 2, 2, 2, 2, 2, 2, 2)
+    #survey.n = c(1, 1, 1, 1, 1, 1, 1, 1, 1, 1) 
+    survey.n = rep(100, 10) # Helpful with optimization to start everything at 100 
+    
     cost.per.survey = c(2910, 3414, 2830, 3600, 1871, 1854, 1854, 2555, 2555, 4172)
-    
-    #survey.n = c(215, 175, 46, 50, 1259, 51, 51, 66, 66, 11)
-    #upper.bound = c(500, 500, 250, 300, 2000, 150, 150, 200, 200, 200)
-    
+
     ## More constraints - this time it's cost constraints. They will be inequality constraints.   
     # NOTE - I'm not sure what the difference between "cost per" and "current cost" is on the sheet 
     
     con <- function(survey.n) {
-      max.cost =  6866963 
-      #max.cost =  4866963 
-      max.capacity = 2590
-      #max.capacity = 2000
-      
       f = NULL
       f = rbind(f, sum(survey.n * cost.per.survey) - max.cost)
       f = rbind(f, sum(survey.n) - max.capacity)
@@ -293,6 +362,7 @@ server <- function(input, output, session) {
                     lb = lower.bound, ub = upper.bound, 
                     tolFun = 1e-08, tolCon = 1e-08, maxnFun = 1e+011, maxIter = 8000)
     
+    
     final.table = data.frame(Survey=c("Spring Trawl","Fall Trawl","Seamap BLL", "NMFS BLL",
                                       "Camera Reef","Summer Plankton Bongo","Summer Plankton Neust",
                                       "Fall Plankton Bongo","Fall Plankton Neust","NMFS Small Pelagics"), 
@@ -303,6 +373,10 @@ server <- function(input, output, session) {
     
     final.table
   })
+  
+  ##################################################################################################################################################
+  # Generating plots 
+  ##################################################################################################################################################
   
     output$optimized.solution <- DT::renderDataTable({
       
