@@ -6,7 +6,7 @@
 # Objective weights default to equal but can be changed by the user 
 objective.weights = data.frame(values = c("commercial_value","recreational_value","ecosystem_value",
                                           "management_importantce",	"uniqueness"), 
-                               weights = c(1,0,0,0,0))
+                               weights = c(0,0,1,0,0))
 
 # Read in a table of species value (or use default values provided by Joel) 
 species.value = read.csv(here::here("data","species_value.csv"))
@@ -76,43 +76,43 @@ obj=function(survey.n){
   
   # Spring trawl 
   spring.trawl.power = survey.n[1]^(-1 * species.survey.freq.value$power_param[species.survey.freq.value$survey == survey.names[1]])
-  spring.trawl.sum = sum(species.survey.freq.value$freq_value[species.survey.freq.value$survey == survey.names[1]] * (1-spring.trawl.power))* 10
+  spring.trawl.sum = sum(species.survey.freq.value$freq_value[species.survey.freq.value$survey == survey.names[1]] * (1-spring.trawl.power))* 100
   
   # Fall trawl 
   fall.trawl.power = survey.n[2]^(-1 * species.survey.freq.value$power_param[species.survey.freq.value$survey == survey.names[2]])
-  fall.trawl.sum = sum(species.survey.freq.value$freq_value[species.survey.freq.value$survey == survey.names[2]] * (1-fall.trawl.power))* 10
+  fall.trawl.sum = sum(species.survey.freq.value$freq_value[species.survey.freq.value$survey == survey.names[2]] * (1-fall.trawl.power))* 100
   
   # Seamap BLL 
   seamap.bll.power = survey.n[3]^(-1 * species.survey.freq.value$power_param[species.survey.freq.value$survey == survey.names[3]])
-  seamap.bll.sum = sum(species.survey.freq.value$freq_value[species.survey.freq.value$survey == survey.names[3]] * (1-seamap.bll.power))* 10
+  seamap.bll.sum = sum(species.survey.freq.value$freq_value[species.survey.freq.value$survey == survey.names[3]] * (1-seamap.bll.power))* 100
   
   # NMFS BLL 
   nmfs.bll.power = survey.n[4]^(-1 * species.survey.freq.value$power_param[species.survey.freq.value$survey == survey.names[4]])
-  nmfs.bll.sum = sum(species.survey.freq.value$freq_value[species.survey.freq.value$survey == survey.names[4]] * (1-nmfs.bll.power))* 10
+  nmfs.bll.sum = sum(species.survey.freq.value$freq_value[species.survey.freq.value$survey == survey.names[4]] * (1-nmfs.bll.power))* 100
   
   # Camera Reef 
   camera.reef.power = survey.n[5]^(-1 * species.survey.freq.value$power_param[species.survey.freq.value$survey == survey.names[5]])
-  camera.reef.sum = sum(species.survey.freq.value$freq_value[species.survey.freq.value$survey == survey.names[5]] * (1-camera.reef.power))* 10
+  camera.reef.sum = sum(species.survey.freq.value$freq_value[species.survey.freq.value$survey == survey.names[5]] * (1-camera.reef.power))* 100
   
   # Sum Plank Bongo 
   sum.plank.bongo.power = survey.n[6]^(-1 * species.survey.freq.value$power_param[species.survey.freq.value$survey == survey.names[6]])
-  sum.plank.bongo.sum = sum(species.survey.freq.value$freq_value[species.survey.freq.value$survey == survey.names[6]] * (1-sum.plank.bongo.power))* 10
+  sum.plank.bongo.sum = sum(species.survey.freq.value$freq_value[species.survey.freq.value$survey == survey.names[6]] * (1-sum.plank.bongo.power))* 100
   
   # Sum Plan Neuston 
   sum.plan.neuston.power = survey.n[7]^(-1 * species.survey.freq.value$power_param[species.survey.freq.value$survey == survey.names[7]])
-  sum.plan.neuston.sum = sum(species.survey.freq.value$freq_value[species.survey.freq.value$survey == survey.names[7]] * (1-sum.plan.neuston.power))* 10
+  sum.plan.neuston.sum = sum(species.survey.freq.value$freq_value[species.survey.freq.value$survey == survey.names[7]] * (1-sum.plan.neuston.power))* 100
   
   # Fall Plank Bongo
   fall.plank.bongo.power = survey.n[8]^(-1 * species.survey.freq.value$power_param[species.survey.freq.value$survey == survey.names[8]])
-  fall.plank.bongo.sum = sum(species.survey.freq.value$freq_value[species.survey.freq.value$survey == survey.names[8]] * (1-fall.plank.bongo.power))* 10
+  fall.plank.bongo.sum = sum(species.survey.freq.value$freq_value[species.survey.freq.value$survey == survey.names[8]] * (1-fall.plank.bongo.power))* 100
   
   # Fall Plank Neust
   fall.plank.neust.power = survey.n[9]^(-1 * species.survey.freq.value$power_param[species.survey.freq.value$survey == survey.names[9]])
-  fall.plank.neust.sum = sum(species.survey.freq.value$freq_value[species.survey.freq.value$survey == survey.names[9]] * (1-fall.plank.neust.power))* 10
+  fall.plank.neust.sum = sum(species.survey.freq.value$freq_value[species.survey.freq.value$survey == survey.names[9]] * (1-fall.plank.neust.power))* 100
   
   # NMFS Small Pelagics 
   nmfs.small.pelagics.power = survey.n[10]^(-1 * species.survey.freq.value$power_param[species.survey.freq.value$survey == survey.names[10]])
-  nmfs.small.pelagics.sum = sum(species.survey.freq.value$freq_value[species.survey.freq.value$survey == survey.names[10]] * (1-nmfs.small.pelagics.power)) * 10
+  nmfs.small.pelagics.sum = sum(species.survey.freq.value$freq_value[species.survey.freq.value$survey == survey.names[10]] * (1-nmfs.small.pelagics.power)) * 100
   
   return(-sum(spring.trawl.sum, fall.trawl.sum, 
              seamap.bll.sum, nmfs.bll.sum, 
@@ -123,7 +123,7 @@ obj=function(survey.n){
   
 }
 
-survey.n = c(1, 1, 1, 1, 1, 1, 1, 1, 1, 1)
+survey.n = rep(100, 10)
 survey.n = c(315, 275, 146, 150, 1359, 51, 51, 66, 66, 111)
 
 lower.bound = c(0, 0, 0, 0, 0, 0, 0, 0, 0, 0)

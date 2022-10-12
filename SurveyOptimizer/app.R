@@ -17,10 +17,11 @@ library(stringr)
 library(DT)
 library(reactable)
 library(NlcOptim)
+require(openxlsx)
 if(!require(shinythemes)) install.packages("shinythemes", repos = "http://cran.us.r-project.org")
 if(!require(shinyWidgets)) install.packages("shinyWidgets", repos = "http://cran.us.r-project.org")
 
-setwd("/Users/lillianmcgill/Documents/SurveyOptimizer")
+#setwd("/Users/lillianmcgill/Documents/SurveyOptimizer")
 
 render_dt = function(data, editable = 'cell', server = TRUE, ...) {
   renderDT(data, selection = 'none', server = server, editable = editable, ...)
@@ -41,6 +42,41 @@ ui = bootstrapPage(
              # Specify titles and that we want multiple panels 
              windowTitle = "Survey Optimizer",
              
+             tabPanel("Optimizer Details", 
+                      tags$h2(HTML(paste0("The <b>Survey Optimizer Model (SOM)</b> allocates sampling effort 
+                        across multiple surveys to maximize information gained and meet management objectives.")), style="color:#045a8d"),
+                      tags$br(),
+                      
+                      tags$h3(HTML(paste0("<b>How it works</b>"))), 
+                      # 
+                      # HTML(paste0(
+                      #   "<p><ul><li> Select an objective weight for each management objective. The weights should reflect agency priorities.</li><li>  
+                      #   Define a value for each species representing their importance to each of the weighted management criteria. This then factors into a valuation of each 
+                      #   survey where the species-survey values are discounted by frequency of occurrence and the CV in each fleet, 
+                      #   which is related to sample size using a simple power function. </li><li>
+                      #   This allows changes in sample size to 
+                      #   affect the CV, and therefore factors into the species and survey valuation and optimization. </li></ul></p>"
+                      # )), 
+                      HTML(paste0(
+                        "<p>The management objectives are weighted to reflect high level prioritization for the agency. It works by first assigning 
+                        a value to each species representing their importance to each of the weighted management criteria, which then factors into a 
+                        valuation of each survey. The species-survey values are discounted by frequency of occurrence and the CV in each fleet, which 
+                        is related to sample size using a simple power function.  This allows changes in sample size to affect the CV, and therefore 
+                        factors into the species and survey valuation and optimization. </p><p>
+                        Values are summed across species and fleets for a combined 
+                        enterprise value, or score, for which to optimize. Optimization is done by adjusting survey sample sizes to maximize the enterprise 
+                        score, subject to logistic constraints (ship days available) and financial constraints (costs).  This SOM highlights the tradeoffs 
+                        associated with achieving different management goals, namely  commercial, recreational, ecosystem,  management importance and 
+                        uniqueness(of the species specific data) criteria.</p><p>
+                        The logistical and financial constraints and can be set at any levels, median values 
+                        for a range of years are included, as well as calculated % increases of 10% 25% and 50%.
+                        Overall survey values are based on the inclusion of the various species, which can be excluded, either as adults, juveniles or both.</p><p> 
+                        Currently all values are in draft stage, and technical documentation on the provenance of the values is under development.  </p>"
+                      )), 
+                      #tags$br(),
+                      tags$h3(HTML(paste0("<b>Example</b>"))), 
+
+             ), 
              tabPanel("Data Options", 
                       
                       sidebarLayout(
@@ -66,32 +102,23 @@ ui = bootstrapPage(
                           ),
                           width = 5
                         ),
-                        
-                        
                           mainPanel(
-                            
                             conditionalPanel(
                               condition = "input.selected_tab == 'parameters' & input.parameter_name == 'Objective Criteria'",
-          
                               DT::dataTableOutput('x3'),
-                              
                             ),
                             conditionalPanel(
                               condition = "input.selected_tab == 'parameters' & input.parameter_name == 'Species Valuation'",
-                              
                               DT::dataTableOutput('x1'),
-                              
                             ),
                             
                             conditionalPanel(
                               condition = "input.selected_tab == 'constraints' & input.constraint_name == 'Survey Size'",
-                              
                               DT::dataTableOutput('x2')
                             ),
                             
                             conditionalPanel(
                               condition = "input.selected_tab == 'constraints' & input.constraint_name == 'Totals'",
-                              
                               DT::dataTableOutput('x4')
                             ),
 
@@ -102,19 +129,39 @@ ui = bootstrapPage(
                       )),
              tabPanel("Run the Optimizer", 
                       fluidRow(
-                         span(tags$h3("Below are the optimzed and current survey size and cost, given the
-                                         parameters specified on the 'Data Options' tab.")),
+                         span(tags$h3(HTML(paste0("Below are the optimzed and current survey size and cost, given the
+                                         parameters specified on the 'Data Options' tab.")))),
 
                         splitLayout(DT::dataTableOutput("optimized.solution"), plotOutput("optimized.solution.plot", height=600),# dataTableOutput("objective.weights"),
                                     cellArgs = list(style = "padding: 15px"),
                                     cellWidths = c("40%", "60%"))
                       )),
-             
-             tabPanel("Plot and Save"), 
+              
+             tabPanel("Plot and Save",
+                      sidebarLayout(
+                        sidebarPanel(
+                          id = "sidebar",
+                          tags$h1("Modify Data Inputs"),
+                          tags$br(),
+                          # HTML(paste0(
+                          #   "<p>Below are the inputs for the survey optimization model that can be modified with user input. Use options below to:</p>",
+                          #   "<ul><li>View current parameters or constraints</li><li>Modify existing parameters or constraints</li><li>Upload your own sheet</li></ul>"
+                          # )),
+                          # tags$br(),
+                          downloadButton(
+                            outputId = "download_btn",
+                            label = "Download")
+                          ),
+                        mainPanel(verbatimTextOutput("TEMP")
+)
+                        
+                        ),
+                      ),
+
              tabPanel("Compare Scenarios")
              
              )
-             )
+  )
 
 # Define server logic required to draw a histogram
 server <- function(input, output, session) {
@@ -286,7 +333,7 @@ server <- function(input, output, session) {
                      "sum_plan_neuston", "fall_plank_bongo", "fall_plank_neust", "nmfs_small_pelagics")
     survey.size.current = c(315, 275, 146, 150, 1359, 51, 51, 66, 66, 111)
     #survey.n = c(1, 1, 1, 1, 1, 1, 1, 1, 1, 1) 
-    survey.n = rep(100, 10) # Helpful with optimization to start everything at 100 
+    survey.n = c(100, 100, 100, 100, 1500, 100, 100, 100, 100, 100) # Helpful with optimization to start everything at 100 
     
     cost.per.survey = c(2910, 3414, 2830, 3600, 1871, 1854, 1854, 2555, 2555, 4172)
 
@@ -311,43 +358,43 @@ server <- function(input, output, session) {
       
       # Spring trawl 
       spring.trawl.power = survey.n[1]^(-1 * species.survey.freq.value$power_param[species.survey.freq.value$survey == survey.names[1]])
-      spring.trawl.sum = sum(species.survey.freq.value$freq_value[species.survey.freq.value$survey == survey.names[1]] * (1-spring.trawl.power))* 10
+      spring.trawl.sum = sum(species.survey.freq.value$freq_value[species.survey.freq.value$survey == survey.names[1]] * (1-spring.trawl.power))* 100
       
       # Fall trawl 
       fall.trawl.power = survey.n[2]^(-1 * species.survey.freq.value$power_param[species.survey.freq.value$survey == survey.names[2]])
-      fall.trawl.sum = sum(species.survey.freq.value$freq_value[species.survey.freq.value$survey == survey.names[2]] * (1-fall.trawl.power))* 10
+      fall.trawl.sum = sum(species.survey.freq.value$freq_value[species.survey.freq.value$survey == survey.names[2]] * (1-fall.trawl.power))* 100
       
       # Seamap BLL 
       seamap.bll.power = survey.n[3]^(-1 * species.survey.freq.value$power_param[species.survey.freq.value$survey == survey.names[3]])
-      seamap.bll.sum = sum(species.survey.freq.value$freq_value[species.survey.freq.value$survey == survey.names[3]] * (1-seamap.bll.power))* 10
+      seamap.bll.sum = sum(species.survey.freq.value$freq_value[species.survey.freq.value$survey == survey.names[3]] * (1-seamap.bll.power))* 100
       
       # NMFS BLL 
       nmfs.bll.power = survey.n[4]^(-1 * species.survey.freq.value$power_param[species.survey.freq.value$survey == survey.names[4]])
-      nmfs.bll.sum = sum(species.survey.freq.value$freq_value[species.survey.freq.value$survey == survey.names[4]] * (1-nmfs.bll.power))* 10
+      nmfs.bll.sum = sum(species.survey.freq.value$freq_value[species.survey.freq.value$survey == survey.names[4]] * (1-nmfs.bll.power))* 100
       
       # Camera Reef 
       camera.reef.power = survey.n[5]^(-1 * species.survey.freq.value$power_param[species.survey.freq.value$survey == survey.names[5]])
-      camera.reef.sum = sum(species.survey.freq.value$freq_value[species.survey.freq.value$survey == survey.names[5]] * (1-camera.reef.power))* 10
+      camera.reef.sum = sum(species.survey.freq.value$freq_value[species.survey.freq.value$survey == survey.names[5]] * (1-camera.reef.power))* 100
       
       # Sum Plank Bongo 
       sum.plank.bongo.power = survey.n[6]^(-1 * species.survey.freq.value$power_param[species.survey.freq.value$survey == survey.names[6]])
-      sum.plank.bongo.sum = sum(species.survey.freq.value$freq_value[species.survey.freq.value$survey == survey.names[6]] * (1-sum.plank.bongo.power))* 10
+      sum.plank.bongo.sum = sum(species.survey.freq.value$freq_value[species.survey.freq.value$survey == survey.names[6]] * (1-sum.plank.bongo.power))* 100
       
       # Sum Plan Neuston 
       sum.plan.neuston.power = survey.n[7]^(-1 * species.survey.freq.value$power_param[species.survey.freq.value$survey == survey.names[7]])
-      sum.plan.neuston.sum = sum(species.survey.freq.value$freq_value[species.survey.freq.value$survey == survey.names[7]] * (1-sum.plan.neuston.power))* 10
+      sum.plan.neuston.sum = sum(species.survey.freq.value$freq_value[species.survey.freq.value$survey == survey.names[7]] * (1-sum.plan.neuston.power))* 100
       
       # Fall Plank Bongo
       fall.plank.bongo.power = survey.n[8]^(-1 * species.survey.freq.value$power_param[species.survey.freq.value$survey == survey.names[8]])
-      fall.plank.bongo.sum = sum(species.survey.freq.value$freq_value[species.survey.freq.value$survey == survey.names[8]] * (1-fall.plank.bongo.power))* 10
+      fall.plank.bongo.sum = sum(species.survey.freq.value$freq_value[species.survey.freq.value$survey == survey.names[8]] * (1-fall.plank.bongo.power))* 100
       
       # Fall Plank Neust
       fall.plank.neust.power = survey.n[9]^(-1 * species.survey.freq.value$power_param[species.survey.freq.value$survey == survey.names[9]])
-      fall.plank.neust.sum = sum(species.survey.freq.value$freq_value[species.survey.freq.value$survey == survey.names[9]] * (1-fall.plank.neust.power))* 10
+      fall.plank.neust.sum = sum(species.survey.freq.value$freq_value[species.survey.freq.value$survey == survey.names[9]] * (1-fall.plank.neust.power))* 100
       
       # NMFS Small Pelagics 
       nmfs.small.pelagics.power = survey.n[10]^(-1 * species.survey.freq.value$power_param[species.survey.freq.value$survey == survey.names[10]])
-      nmfs.small.pelagics.sum = sum(species.survey.freq.value$freq_value[species.survey.freq.value$survey == survey.names[10]] * (1-nmfs.small.pelagics.power)) * 10
+      nmfs.small.pelagics.sum = sum(species.survey.freq.value$freq_value[species.survey.freq.value$survey == survey.names[10]] * (1-nmfs.small.pelagics.power)) * 100
       
       return(-sum(spring.trawl.sum, fall.trawl.sum, 
                   seamap.bll.sum, nmfs.bll.sum, 
@@ -359,8 +406,8 @@ server <- function(input, output, session) {
     }
     
     result <- solnl(X = survey.n, objfun = obj, confun = con, 
-                    lb = lower.bound, ub = upper.bound, 
-                    tolFun = 1e-08, tolCon = 1e-08, maxnFun = 1e+011, maxIter = 8000)
+                    lb = lower.bound, ub = upper.bound, tolX = 1e-08, 
+                    tolFun = 1e-09, tolCon = 1e-09, maxnFun = 1e+07, maxIter = 8000)
     
     
     final.table = data.frame(Survey=c("Spring Trawl","Fall Trawl","Seamap BLL", "NMFS BLL",
@@ -415,7 +462,59 @@ server <- function(input, output, session) {
       
     })
     
+    ## Downloading files 
+    # output$download_btn <- downloadHandler(
+    #   filename = function(){
+    #     paste("my_data_", Sys.Date(), ".zip", sep = "")
+    #   },
+    #   content = function(file){
+    #     
+    #     temp_directory <- file.path(tempdir(), as.integer(Sys.time()))
+    #     dir.create(temp_directory)
+    #     
+    #     reactiveValuesToList(to_download) %>%
+    #       imap(function(x,y){
+    #         if(!is.null(x)){
+    #           file_name <- glue("{y}_data.csv")
+    #           readr::write_csv(x, file.path(temp_directory, file_name))
+    #         }
+    #       })
+    #     
+    #     
+    #     zip::zip(
+    #       zipfile = file,
+    #       files = dir(temp_directory),
+    #       root = temp_directory
+    #     )
+    #     
+    #     
+    #     
+    #   },
+    #   contentType = "application/zip"
+    #   
+    # )
     
+    output$download_btn <- downloadHandler(
+      #filename = function() {paste0(input$main, " vs ", input$control, " ", input$obRange[1], "-", input$obRange[2], ".xlsx")},
+      
+      filename = function() {paste("my_data_", Sys.Date(), ".xlsx", sep = "")},
+      content = function(file) {
+        
+        fname <- paste(file,"xlsx",sep=".")
+        wb <- createWorkbook("Survey_shinyapp", "Survey results")
+        addWorksheet(wb, sheetName = "model")
+        addWorksheet(wb, sheetName = "data")
+        writeData(wb, optimized.solution(), sheet = "model")
+        writeData(wb, optimized.solution(), sheet = "data")
+        saveWorkbook(wb, file = file)
+        
+      },
+      contentType = "file/xlsx"
+    )
+    
+    output$TEMP <- renderText({
+      paste0("x=", "Dumb")
+    })
 }
 
 # Run the application 
