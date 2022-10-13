@@ -470,6 +470,9 @@ server <- function(input, output, session) {
     final.table
   })
   
+  enterprise.score <- reactive({
+    
+  })
   ##################################################################################################################################################
   # Generating plots 
   ##################################################################################################################################################
@@ -511,38 +514,22 @@ server <- function(input, output, session) {
       
     })
     
-    ## Downloading files 
-    # output$download_btn <- downloadHandler(
-    #   filename = function(){
-    #     paste("my_data_", Sys.Date(), ".zip", sep = "")
-    #   },
-    #   content = function(file){
-    #     
-    #     temp_directory <- file.path(tempdir(), as.integer(Sys.time()))
-    #     dir.create(temp_directory)
-    #     
-    #     reactiveValuesToList(to_download) %>%
-    #       imap(function(x,y){
-    #         if(!is.null(x)){
-    #           file_name <- glue("{y}_data.csv")
-    #           readr::write_csv(x, file.path(temp_directory, file_name))
-    #         }
-    #       })
-    #     
-    #     
-    #     zip::zip(
-    #       zipfile = file,
-    #       files = dir(temp_directory),
-    #       root = temp_directory
-    #     )
-    #     
-    #     
-    #     
-    #   },
-    #   contentType = "application/zip"
-    #   
-    # )
-    
+    output$optimized.enterprise.score <- renderPlot({ 
+      
+      enterprise.score() %>% 
+        ggplot(aes(x=Survey, y=enterprise.score, fill=Group)) + 
+        geom_bar(position="stack", stat="identity", color="black")+
+        theme_half_open(12) + 
+        xlab("")+
+        ylab("Enterprise Score")+
+        #scale_fill_manual(values=c("gray","darkgreen"))+
+        theme(axis.text.x = element_text(angle = 45,hjust=1)) + 
+        theme(legend.position = "top", 
+              legend.title = element_blank())
+      
+      })
+      
+ 
     output$download_btn <- downloadHandler(
       #filename = function() {paste0(input$main, " vs ", input$control, " ", input$obRange[1], "-", input$obRange[2], ".xlsx")},
       
