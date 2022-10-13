@@ -6,7 +6,7 @@
 # Objective weights default to equal but can be changed by the user 
 objective.weights = data.frame(values = c("commercial_value","recreational_value","ecosystem_value",
                                           "management_importantce",	"uniqueness"), 
-                               weights = c(0,0,1,0,0))
+                               weights = c(1,1,1,1,1))
 
 # Read in a table of species value (or use default values provided by Joel) 
 species.value = read.csv(here::here("data","species_value.csv"))
@@ -37,8 +37,7 @@ species.survey.power = read.csv(here::here("data","species_power_parameter.csv")
 species.survey.freq.value = left_join(species.survey.freq, species.value[, c("species", "life_stage","total_value")], by=c("species", "life_stage")) %>% 
   gather("survey","pct_freq",-c(species, life_stage, Group, total_value)) %>% 
   left_join(., species.survey.power, by=c("species", "life_stage", "Group", "survey")) %>% 
-  dplyr::mutate(freq_value = total_value * pct_freq) %>% 
-  dplyr::select(survey, freq_value, power_param)
+  dplyr::mutate(freq_value = total_value * pct_freq) 
 
 ################################################################################################################
 ##################################### Optimization routine ###############################
@@ -123,8 +122,42 @@ obj=function(survey.n){
   
 }
 
-survey.n = rep(100, 10)
+
+opt.value=function(final.table){
+  
+  survey.names = c("spring_trawl", "fall_trawl", "seamap_bll", "nmfs_bll", "camera_reef", "sum_plank_bongo",
+                   "sum_plan_neuston", "fall_plank_bongo", "fall_plank_neust", "nmfs_small_pelagics")
+  
+  final.table$survey = survey.names
+  new.values = left_join(species.survey.freq.value, final.table[, c("Survey","survey","Optimized.N")], by="survey") %>% 
+    rowwise() %>% 
+    dplyr::mutate(enterprise.score = Optimized.N^(-1*power_param)) %>% 
+    dplyr::mutate(enterprise.score = freq_value * (1-enterprise.score) * 100) %>% 
+    dplyr::ungroup() %>% 
+    dplyr::select(Group, Survey, enterprise.score) %>% 
+    dplyr::group_by(Group, Survey) %>% 
+    dplyr::summarize(enterprise.score = sum(enterprise.score)) %>% 
+    dplyr::ungroup()
+
+  return(new.values)
+  
+}
+
+new.values %>% 
+  ggplot(aes(x=Survey, y=enterprise.score, fill=Group)) + 
+  geom_bar(position="stack", stat="identity", color="black")+
+  theme_half_open(12) + 
+  xlab("")+
+  ylab("Enterprise Score")+
+  #scale_fill_manual(values=c("gray","darkgreen"))+
+  theme(axis.text.x = element_text(angle = 45,hjust=1)) + 
+  theme(legend.position = "top", 
+        legend.title = element_blank())
+  
+
+survey.n = rep(1000, 10)
 survey.n = c(315, 275, 146, 150, 1359, 51, 51, 66, 66, 111)
+survey.size.current = c(315, 275, 146, 150, 1359, 51, 51, 66, 66, 111)
 
 lower.bound = c(0, 0, 0, 0, 0, 0, 0, 0, 0, 0)
 upper.bound = c(346, 302, 160, 165, 1494, 56, 56, 72, 72, 122)
@@ -151,7 +184,7 @@ final.table = data.frame(Survey=c("Spring Trawl","Fall Trawl","Seamap BLL", "NMF
                                   "Camera Reef","Summer Plankton Bongo","Summer Plankton Neust",
                                   "Fall Plankton Bongo","Fall Plankton Neust","NMFS Small Pelagics"), 
                          Optimized.N = round(result$par, digits=0), 
-                         Current.N = round(survey.n, digits=0), 
+                         Current.N = round(survey.size.current, digits=0), 
                          Optimized.Cost = round(result$par * cost.per.survey, digits=0), 
                          Current.Cost = round(survey.size.current * cost.per.survey, digits=0))
 
