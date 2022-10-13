@@ -80,41 +80,7 @@ ui = bootstrapPage(
                         )
                         )
                       ),
-             
-             #          tags$h2(HTML(paste0("The <b>Survey Optimizer Model (SOM)</b> allocates sampling effort 
-             #            across multiple surveys to maximize information gained and meet management objectives for Gulf of Mexico fisheries.")), style={'color:#045a8d; padding-left: 100px; padding-right: 100px'}),
-             #          tags$br(),
-             #          
-             #          tags$h3(HTML(paste0("<b>How it works</b>"))), 
-             #          # 
-             #          # HTML(paste0(
-             #          #   "<p><ul><li> Select an objective weight for each management objective. The weights should reflect agency priorities.</li><li>  
-             #          #   Define a value for each species representing their importance to each of the weighted management criteria. This then factors into a valuation of each 
-             #          #   survey where the species-survey values are discounted by frequency of occurrence and the CV in each fleet, 
-             #          #   which is related to sample size using a simple power function. </li><li>
-             #          #   This allows changes in sample size to 
-             #          #   affect the CV, and therefore factors into the species and survey valuation and optimization. </li></ul></p>"
-             #          # )), 
-             #          HTML(paste0(
-             #            "<p>The management objectives are weighted to reflect high level prioritization for the agency. It works by first assigning 
-             #            a value to each species representing their importance to each of the weighted management criteria, which then factors into a 
-             #            valuation of each survey. The species-survey values are discounted by frequency of occurrence and the CV in each fleet, which 
-             #            is related to sample size using a simple power function.  This allows changes in sample size to affect the CV, and therefore 
-             #            factors into the species and survey valuation and optimization. </p><p>
-             #            Values are summed across species and fleets for a combined 
-             #            enterprise value, or score, for which to optimize. Optimization is done by adjusting survey sample sizes to maximize the enterprise 
-             #            score, subject to logistic constraints (ship days available) and financial constraints (costs).  This SOM highlights the tradeoffs 
-             #            associated with achieving different management goals, namely  commercial, recreational, ecosystem,  management importance and 
-             #            uniqueness(of the species specific data) criteria.</p><p>
-             #            The logistical and financial constraints and can be set at any levels, median values 
-             #            for a range of years are included, as well as calculated % increases of 10% 25% and 50%.
-             #            Overall survey values are based on the inclusion of the various species, which can be excluded, either as adults, juveniles or both.</p><p> 
-             #            Currently all values are in draft stage, and technical documentation on the provenance of the values is under development.  </p>"
-             #          )), 
-             #          #tags$br(),
-             #          tags$h3(HTML(paste0("<b>Example</b>"))), 
-             # 
-             # ), 
+
              tabPanel("Data Options", 
                       
                       sidebarLayout(
@@ -179,8 +145,10 @@ ui = bootstrapPage(
                                       to visualize and to save your data for later comparions between scenarios.")),
                           tags$br(),
                           tags$br(),
-                          radioButtons("plot", "Metric Options:",
-                                       c("Survey Size and Cost Comparison" = "survy_size",
+                          radioButtons(inputId = "plot_select", 
+                                       label = "Metric Options:",
+                                       choices = 
+                                         c("Survey Size and Cost Comparison" = "survy_size",
                                          "Group Totals" = "group_total",
                                          "Survey Valuation by Group" = "group_value")),
                           tags$br(),
@@ -190,21 +158,29 @@ ui = bootstrapPage(
                           width = 5
                           
                         ), 
-                        mainPanel(HTML(paste0("<b>Optimized Solution Plot</b>")),
-                                  plotOutput("optimized.solution.plot", height=600),
-                                  HTML(paste0("<b>Optimized Solution Table</b>")),
-                                  DT::dataTableOutput("optimized.solution"), 
+                        mainPanel(
+                          conditionalPanel(
+                          condition = "input.plot_select == 'survy_size'",
+                          HTML(paste0("<b>Optimized Solution Plot</b>")),
+                          plotOutput("optimized.solution.plot", height=600),
+                          HTML(paste0("<b>Optimized Solution Table</b>")),
+                          DT::dataTableOutput("optimized.solution"),
+                          ),
+                          conditionalPanel(
+                            condition = "input.plot_select == 'group_value'",
+                            HTML(paste0("<b>Optimized Solution Plot</b>")),
+                            plotOutput("optimized.enterprise.score.plot", height=600),
+                            HTML(paste0("<b>Optimized Solution Table</b>")),
+                            DT::dataTableOutput("optimized.enterprise.score"),
+                            ),
+
                                   width = 7
                         )
+
+                        
                       ),
                       ), 
-                          
-                      # fluidRow(
-                      #    
-                      #   splitLayout(DT::dataTableOutput("optimized.solution"), plotOutput("optimized.solution.plot", height=600),# dataTableOutput("objective.weights"),
-                      #               cellArgs = list(style = "padding: 15px"),
-                      #               cellWidths = c("40%", "60%"))
-                      # )),
+                        
               
 
              tabPanel("Compare Scenarios")
@@ -337,9 +313,9 @@ server <- function(input, output, session) {
   # Getting data/ running optimization 
   ##################################################################################################################################################
   
-  optimized.data <- reactive({
+  frequency.data <- reactive({
     
-    # Get the necesary parameters from reactive data 
+    # Get the necessary parameters from reactive data 
     objective.weights.new = data.frame(objective.weights.new$data) 
     upper.bound = data.frame(bounds.new$data)$upper.bound
     lower.bound = data.frame(bounds.new$data)$lower.bound
@@ -374,15 +350,26 @@ server <- function(input, output, session) {
     species.survey.freq.value = left_join(species.survey.freq, survey.value[, c("species", "life_stage","total_value")], by=c("species", "life_stage")) %>% 
       gather("survey","pct_freq",-c(species, life_stage, Group, total_value)) %>% 
       left_join(., species.survey.power, by=c("species", "life_stage", "Group", "survey")) %>% 
-      dplyr::mutate(freq_value = total_value * pct_freq) %>% 
-      dplyr::select(survey, freq_value, power_param)
+      dplyr::mutate(freq_value = total_value * pct_freq) 
     
+    return(species.survey.freq.value)
+  })
+  
+  optimized.data <- reactive({
+    
+    # Get the necessary parameters from reactive data 
+    upper.bound = data.frame(bounds.new$data)$upper.bound
+    lower.bound = data.frame(bounds.new$data)$lower.bound
+    max.cost =  data.frame(totals.new$data)[1,2]
+    max.capacity = data.frame(totals.new$data)[2,2]
+    
+    species.survey.freq.value = frequency.data()
     
     survey.names = c("spring_trawl", "fall_trawl", "seamap_bll", "nmfs_bll", "camera_reef", "sum_plank_bongo",
                      "sum_plan_neuston", "fall_plank_bongo", "fall_plank_neust", "nmfs_small_pelagics")
     survey.size.current = c(315, 275, 146, 150, 1359, 51, 51, 66, 66, 111)
     #survey.n = c(1, 1, 1, 1, 1, 1, 1, 1, 1, 1) 
-    survey.n = c(100, 100, 100, 100, 1500, 100, 100, 100, 100, 100) # Helpful with optimization to start everything at 100 
+    survey.n = c(1000, 1000, 1000, 1000, 1500, 1000, 1000, 1000, 1000, 1000) # Helpful with optimization to start everything at 100 
     
     cost.per.survey = c(2910, 3414, 2830, 3600, 1871, 1854, 1854, 2555, 2555, 4172)
 
@@ -471,7 +458,24 @@ server <- function(input, output, session) {
   })
   
   enterprise.score <- reactive({
+    survey.names = c("spring_trawl", "fall_trawl", "seamap_bll", "nmfs_bll", "camera_reef", "sum_plank_bongo",
+                     "sum_plan_neuston", "fall_plank_bongo", "fall_plank_neust", "nmfs_small_pelagics")
     
+    species.survey.freq.value = frequency.data()
+    final.table.n = optimized.data()
+    final.table.n$survey = survey.names
+    new.values = left_join(species.survey.freq.value, final.table.n[, c("Survey","survey","Optimized.N")], by="survey") %>% 
+      rowwise() %>% 
+      dplyr::mutate(enterprise.score = Optimized.N^(-1*power_param)) %>% 
+      dplyr::mutate(enterprise.score = freq_value * (1-enterprise.score) * 100) %>% 
+      dplyr::ungroup() %>% 
+      dplyr::select(Group, Survey, enterprise.score) %>% 
+      dplyr::group_by(Group, Survey) %>% 
+      dplyr::summarize(enterprise.score = sum(enterprise.score)) %>% 
+      dplyr::ungroup() %>% 
+      dplyr::mutate(enterprise.score = round(enterprise.score, 2))
+    
+    return(new.values)
   })
   ##################################################################################################################################################
   # Generating plots 
@@ -488,7 +492,7 @@ server <- function(input, output, session) {
                             Current.Cost=sum(optimized.data()$Current.Cost))) %>%
         datatable(rownames = T, # set rownames T
                   options = list(columnDefs = list(list(visible = F, targets = 0)),
-                                 pageLength = 15, info = FALSE,dom = 't')) %>%
+                                 pageLength = 15, info = FALSE)) %>%
         formatStyle(
           0, target = "row",
           fontWeight = styleEqual(11, "bold"))
@@ -514,7 +518,16 @@ server <- function(input, output, session) {
       
     })
     
-    output$optimized.enterprise.score <- renderPlot({ 
+    output$optimized.enterprise.score <- DT::renderDataTable({
+      
+      #bounds.new$data
+      enterprise.score()  %>%
+        datatable(rownames = T, # set rownames T
+                  options = list(columnDefs = list(list(visible = F, targets = 0)),
+                                 pageLength = 15, info = FALSE))
+    })
+    
+    output$optimized.enterprise.score.plot <- renderPlot({ 
       
       enterprise.score() %>% 
         ggplot(aes(x=Survey, y=enterprise.score, fill=Group)) + 

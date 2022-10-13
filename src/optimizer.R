@@ -184,7 +184,7 @@ final.table = data.frame(Survey=c("Spring Trawl","Fall Trawl","Seamap BLL", "NMF
                                   "Camera Reef","Summer Plankton Bongo","Summer Plankton Neust",
                                   "Fall Plankton Bongo","Fall Plankton Neust","NMFS Small Pelagics"), 
                          Optimized.N = round(result$par, digits=0), 
-                         Current.N = round(survey.n, digits=0), 
+                         Current.N = round(survey.size.current, digits=0), 
                          Optimized.Cost = round(result$par * cost.per.survey, digits=0), 
                          Current.Cost = round(survey.size.current * cost.per.survey, digits=0))
 
