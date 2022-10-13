@@ -46,18 +46,24 @@ ui = bootstrapPage(
                       sidebarLayout(
                         sidebarPanel(
                           id = "maininfo",
-                          tags$h3(HTML(paste0("The <b>Survey Optimizer Model</b> allocates sampling effort 
+                          tags$h2(HTML(paste0("The <b>Survey Optimizer Model</b> allocates sampling effort 
                           across the following Gulf of Mexico fisheries surveys to maximize insights and meet management objectives:")), style={'color:#045a8d'}), 
                           tags$h4(HTML(paste0(
-                            "<ul><li>Spring and Fall Trawls</li><li>Seamap and NMFS BLL</li><li>Camera/ Reef</li><li>ETC</li></ul>"
-                          )), style={'color:#045a8d'}),
+                            "<ul><li>Camera/ Reef</li><li>SEAMAP Spring Trawl</li><li>SEAMAP Fall Trawl</li><li>SEAMAP Bottom Longline</li><li>SEAMAP Summer Plankton Bongo</li>
+                            <li>SEAMAP Summer Plankton Neuston</li><li>SEAMAP Fall Plankton Bongo</li><li>SEAMAP Fall Plankton Neuston</li>
+                            <li>NMFS Bottom Longline</li><li>NMFS Small Pelagics</li></ul>"
+                          )), style={'color:#045a8d'}), #
                           width = 5
                           
                         ), 
                         mainPanel(
-                          tags$h3(HTML(paste0("<b>How it works</b>"))),
+                          tags$h3(HTML(paste0("<b>How it works (this needs to be modified)</b>"))),
                           HTML(paste0(
-                            "<p>The management objectives are weighted to reflect high level prioritization for the agency. It works by first assigning
+                            "<p>The optimization routine seeks to maximize the <b>Enterprise Score</b>, which is a combination of multiple, weighted objective criteria, 
+                                     by modifying the number of each type of survey. Each survey has a specific value according to the frequency which it encounters a fish 
+                                     and the CV (a function of sample size). Low frequencies and high CVs lead to a lower valuation. Constraints are the total cost, total 
+                                     capacity, and the capacity for each specific type of survey. 
+                                     The <b>Objective Criteria</b> consist of management objectives that are weighted to reflect high level prioritization for the agency. It works by first assigning
                                      a value to each species representing their importance to each of the weighted management criteria, which then factors into a
                                      valuation of each survey. The species-survey values are discounted by frequency of occurrence and the CV in each fleet, which
                                      is related to sample size using a simple power function.  This allows changes in sample size to affect the CV, and therefore
