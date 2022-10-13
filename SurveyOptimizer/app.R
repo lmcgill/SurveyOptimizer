@@ -6,7 +6,7 @@
 
 
 ## Load in required libraries/ R packages 
-library(shiny)
+library(shiny) 
 library(dplyr)
 library(ggplot2)
 library(raster)
@@ -43,40 +43,78 @@ ui = bootstrapPage(
              windowTitle = "Survey Optimizer",
              
              tabPanel("Optimizer Details", 
-                      tags$h2(HTML(paste0("The <b>Survey Optimizer Model (SOM)</b> allocates sampling effort 
-                        across multiple surveys to maximize information gained and meet management objectives.")), style="color:#045a8d"),
-                      tags$br(),
-                      
-                      tags$h3(HTML(paste0("<b>How it works</b>"))), 
-                      # 
-                      # HTML(paste0(
-                      #   "<p><ul><li> Select an objective weight for each management objective. The weights should reflect agency priorities.</li><li>  
-                      #   Define a value for each species representing their importance to each of the weighted management criteria. This then factors into a valuation of each 
-                      #   survey where the species-survey values are discounted by frequency of occurrence and the CV in each fleet, 
-                      #   which is related to sample size using a simple power function. </li><li>
-                      #   This allows changes in sample size to 
-                      #   affect the CV, and therefore factors into the species and survey valuation and optimization. </li></ul></p>"
-                      # )), 
-                      HTML(paste0(
-                        "<p>The management objectives are weighted to reflect high level prioritization for the agency. It works by first assigning 
-                        a value to each species representing their importance to each of the weighted management criteria, which then factors into a 
-                        valuation of each survey. The species-survey values are discounted by frequency of occurrence and the CV in each fleet, which 
-                        is related to sample size using a simple power function.  This allows changes in sample size to affect the CV, and therefore 
-                        factors into the species and survey valuation and optimization. </p><p>
-                        Values are summed across species and fleets for a combined 
-                        enterprise value, or score, for which to optimize. Optimization is done by adjusting survey sample sizes to maximize the enterprise 
-                        score, subject to logistic constraints (ship days available) and financial constraints (costs).  This SOM highlights the tradeoffs 
-                        associated with achieving different management goals, namely  commercial, recreational, ecosystem,  management importance and 
-                        uniqueness(of the species specific data) criteria.</p><p>
-                        The logistical and financial constraints and can be set at any levels, median values 
-                        for a range of years are included, as well as calculated % increases of 10% 25% and 50%.
-                        Overall survey values are based on the inclusion of the various species, which can be excluded, either as adults, juveniles or both.</p><p> 
-                        Currently all values are in draft stage, and technical documentation on the provenance of the values is under development.  </p>"
-                      )), 
-                      #tags$br(),
-                      tags$h3(HTML(paste0("<b>Example</b>"))), 
+                      sidebarLayout(
+                        sidebarPanel(
+                          id = "maininfo",
+                          tags$h3(HTML(paste0("The <b>Survey Optimizer Model</b> allocates sampling effort 
+                          across the following Gulf of Mexico fisheries surveys to maximize insights and meet management objectives:")), style={'color:#045a8d'}), 
+                          tags$h4(HTML(paste0(
+                            "<ul><li>Spring and Fall Trawls</li><li>Seamap and NMFS BLL</li><li>Camera/ Reef</li><li>ETC</li></ul>"
+                          )), style={'color:#045a8d'}),
+                          width = 5
+                          
+                        ), 
+                        mainPanel(
+                          tags$h3(HTML(paste0("<b>How it works</b>"))),
+                                   HTML(paste0(
+                                     "<p>The management objectives are weighted to reflect high level prioritization for the agency. It works by first assigning
+                                     a value to each species representing their importance to each of the weighted management criteria, which then factors into a
+                                     valuation of each survey. The species-survey values are discounted by frequency of occurrence and the CV in each fleet, which
+                                     is related to sample size using a simple power function.  This allows changes in sample size to affect the CV, and therefore
+                                     factors into the species and survey valuation and optimization. </p><p>
+                                     Values are summed across species and fleets for a combined
+                                     enterprise value, or score, for which to optimize. Optimization is done by adjusting survey sample sizes to maximize the enterprise
+                                     score, subject to logistic constraints (ship days available) and financial constraints (costs).  This SOM highlights the tradeoffs
+                                     associated with achieving different management goals, namely  commercial, recreational, ecosystem,  management importance and
+                                     uniqueness(of the species specific data) criteria.</p><p>
+                                     The logistical and financial constraints and can be set at any levels, median values
+                                     for a range of years are included, as well as calculated % increases of 10% 25% and 50%.
+                                     Overall survey values are based on the inclusion of the various species, which can be excluded, either as adults, juveniles or both.</p><p>
+                                     Currently all values are in draft stage, and technical documentation on the provenance of the values is under development.  </p>"
+                                   )),
+                                   #tags$br(),
+                                   tags$h3(HTML(paste0("<b>Example</b>"))),
+                          width = 7
+                          
 
-             ), 
+                        )
+                        )
+                      ),
+             
+             #          tags$h2(HTML(paste0("The <b>Survey Optimizer Model (SOM)</b> allocates sampling effort 
+             #            across multiple surveys to maximize information gained and meet management objectives for Gulf of Mexico fisheries.")), style={'color:#045a8d; padding-left: 100px; padding-right: 100px'}),
+             #          tags$br(),
+             #          
+             #          tags$h3(HTML(paste0("<b>How it works</b>"))), 
+             #          # 
+             #          # HTML(paste0(
+             #          #   "<p><ul><li> Select an objective weight for each management objective. The weights should reflect agency priorities.</li><li>  
+             #          #   Define a value for each species representing their importance to each of the weighted management criteria. This then factors into a valuation of each 
+             #          #   survey where the species-survey values are discounted by frequency of occurrence and the CV in each fleet, 
+             #          #   which is related to sample size using a simple power function. </li><li>
+             #          #   This allows changes in sample size to 
+             #          #   affect the CV, and therefore factors into the species and survey valuation and optimization. </li></ul></p>"
+             #          # )), 
+             #          HTML(paste0(
+             #            "<p>The management objectives are weighted to reflect high level prioritization for the agency. It works by first assigning 
+             #            a value to each species representing their importance to each of the weighted management criteria, which then factors into a 
+             #            valuation of each survey. The species-survey values are discounted by frequency of occurrence and the CV in each fleet, which 
+             #            is related to sample size using a simple power function.  This allows changes in sample size to affect the CV, and therefore 
+             #            factors into the species and survey valuation and optimization. </p><p>
+             #            Values are summed across species and fleets for a combined 
+             #            enterprise value, or score, for which to optimize. Optimization is done by adjusting survey sample sizes to maximize the enterprise 
+             #            score, subject to logistic constraints (ship days available) and financial constraints (costs).  This SOM highlights the tradeoffs 
+             #            associated with achieving different management goals, namely  commercial, recreational, ecosystem,  management importance and 
+             #            uniqueness(of the species specific data) criteria.</p><p>
+             #            The logistical and financial constraints and can be set at any levels, median values 
+             #            for a range of years are included, as well as calculated % increases of 10% 25% and 50%.
+             #            Overall survey values are based on the inclusion of the various species, which can be excluded, either as adults, juveniles or both.</p><p> 
+             #            Currently all values are in draft stage, and technical documentation on the provenance of the values is under development.  </p>"
+             #          )), 
+             #          #tags$br(),
+             #          tags$h3(HTML(paste0("<b>Example</b>"))), 
+             # 
+             # ), 
              tabPanel("Data Options", 
                       
                       sidebarLayout(
@@ -86,7 +124,10 @@ ui = bootstrapPage(
                           tags$br(),
                           HTML(paste0(
                             "<p>Below are the inputs for the survey optimization model that can be modified with user input. Use options below to:</p>",
-                            "<ul><li>View current parameters or constraints</li><li>Modify existing parameters or constraints</li><li>Upload your own sheet</li></ul>"
+                            "<ul><li>View current parameters or constraints</li><li>Modify existing parameters or constraints</li><li>Upload your own sheet</li></ul>", 
+                            "<p>Note that if you choose to upload your own data sheets, please ensure are .csv files with identical columns and values  provided for every 
+                            species.</p>"
+                            
                           )),
                           tags$br(),
                           tabsetPanel(
@@ -128,35 +169,43 @@ ui = bootstrapPage(
                       )
                       )),
              tabPanel("Run the Optimizer", 
-                      fluidRow(
-                         span(tags$h3(HTML(paste0("Below are the optimzed and current survey size and cost, given the
-                                         parameters specified on the 'Data Options' tab.")))),
-
-                        splitLayout(DT::dataTableOutput("optimized.solution"), plotOutput("optimized.solution.plot", height=600),# dataTableOutput("objective.weights"),
-                                    cellArgs = list(style = "padding: 15px"),
-                                    cellWidths = c("40%", "60%"))
-                      )),
-              
-             tabPanel("Plot and Save",
                       sidebarLayout(
                         sidebarPanel(
                           id = "sidebar",
-                          tags$h1("Modify Data Inputs"),
+                          tags$h1("Optimizer Results"),
                           tags$br(),
-                          # HTML(paste0(
-                          #   "<p>Below are the inputs for the survey optimization model that can be modified with user input. Use options below to:</p>",
-                          #   "<ul><li>View current parameters or constraints</li><li>Modify existing parameters or constraints</li><li>Upload your own sheet</li></ul>"
-                          # )),
-                          # tags$br(),
+                          HTML(paste0("Below are comparions between current survey values and the optimized values given 
+                                         parameters specified on the 'Data Options' tab. Use the buttons below to choose what metric 
+                                      to visualize and to save your data for later comparions between scenarios.")),
+                          tags$br(),
+                          tags$br(),
+                          radioButtons("plot", "Metric Options:",
+                                       c("Survey Size and Cost Comparison" = "survy_size",
+                                         "Group Totals" = "group_total",
+                                         "Survey Valuation by Group" = "group_value")),
+                          tags$br(),
                           downloadButton(
                             outputId = "download_btn",
-                            label = "Download")
-                          ),
-                        mainPanel(verbatimTextOutput("TEMP")
-)
-                        
-                        ),
+                            label = "Download Results"),
+                          width = 5
+                          
+                        ), 
+                        mainPanel(HTML(paste0("<b>Optimized Solution Plot</b>")),
+                                  plotOutput("optimized.solution.plot", height=600),
+                                  HTML(paste0("<b>Optimized Solution Table</b>")),
+                                  DT::dataTableOutput("optimized.solution"), 
+                                  width = 7
+                        )
                       ),
+                      ), 
+                          
+                      # fluidRow(
+                      #    
+                      #   splitLayout(DT::dataTableOutput("optimized.solution"), plotOutput("optimized.solution.plot", height=600),# dataTableOutput("objective.weights"),
+                      #               cellArgs = list(style = "padding: 15px"),
+                      #               cellWidths = c("40%", "60%"))
+                      # )),
+              
 
              tabPanel("Compare Scenarios")
              
