@@ -46,24 +46,18 @@ ui = bootstrapPage(
                       sidebarLayout(
                         sidebarPanel(
                           id = "maininfo",
-                          tags$h2(HTML(paste0("The <b>Survey Optimizer Model</b> allocates sampling effort 
+                          tags$h3(HTML(paste0("The <b>Survey Optimizer Model</b> allocates sampling effort 
                           across the following Gulf of Mexico fisheries surveys to maximize insights and meet management objectives:")), style={'color:#045a8d'}), 
                           tags$h4(HTML(paste0(
-                            "<ul><li>Camera/ Reef</li><li>SEAMAP Spring Trawl</li><li>SEAMAP Fall Trawl</li><li>SEAMAP Bottom Longline</li><li>SEAMAP Summer Plankton Bongo</li>
-                            <li>SEAMAP Summer Plankton Neuston</li><li>SEAMAP Fall Plankton Bongo</li><li>SEAMAP Fall Plankton Neuston</li>
-                            <li>NMFS Bottom Longline</li><li>NMFS Small Pelagics</li></ul>"
-                          )), style={'color:#045a8d'}), #
+                            "<ul><li>Spring and Fall Trawls</li><li>Seamap and NMFS BLL</li><li>Camera/ Reef</li><li>ETC</li></ul>"
+                          )), style={'color:#045a8d'}),
                           width = 5
                           
                         ), 
                         mainPanel(
-                          tags$h3(HTML(paste0("<b>How it works (this needs to be modified)</b>"))),
-                          HTML(paste0(
-                            "<p>The optimization routine seeks to maximize the <b>Enterprise Score</b>, which is a combination of multiple, weighted objective criteria, 
-                                     by modifying the number of each type of survey. Each survey has a specific value according to the frequency which it encounters a fish 
-                                     and the CV (a function of sample size). Low frequencies and high CVs lead to a lower valuation. Constraints are the total cost, total 
-                                     capacity, and the capacity for each specific type of survey. 
-                                     The <b>Objective Criteria</b> consist of management objectives that are weighted to reflect high level prioritization for the agency. It works by first assigning
+                          tags$h3(HTML(paste0("<b>How it works</b>"))),
+                                   HTML(paste0(
+                                     "<p>The management objectives are weighted to reflect high level prioritization for the agency. It works by first assigning
                                      a value to each species representing their importance to each of the weighted management criteria, which then factors into a
                                      valuation of each survey. The species-survey values are discounted by frequency of occurrence and the CV in each fleet, which
                                      is related to sample size using a simple power function.  This allows changes in sample size to affect the CV, and therefore
@@ -77,16 +71,16 @@ ui = bootstrapPage(
                                      for a range of years are included, as well as calculated % increases of 10% 25% and 50%.
                                      Overall survey values are based on the inclusion of the various species, which can be excluded, either as adults, juveniles or both.</p><p>
                                      Currently all values are in draft stage, and technical documentation on the provenance of the values is under development.  </p>"
-                          )),
-                          #tags$br(),
-                          tags$h3(HTML(paste0("<b>Example</b>"))),
+                                   )),
+                                   #tags$br(),
+                                   tags$h3(HTML(paste0("<b>Example</b>"))),
                           width = 7
                           
-                          
+
                         )
-                      )
-             ),
-             
+                        )
+                      ),
+
              tabPanel("Data Options", 
                       
                       sidebarLayout(
@@ -115,30 +109,30 @@ ui = bootstrapPage(
                           ),
                           width = 5
                         ),
-                        mainPanel(
-                          conditionalPanel(
-                            condition = "input.selected_tab == 'parameters' & input.parameter_name == 'Objective Criteria'",
-                            DT::dataTableOutput('x3'),
-                          ),
-                          conditionalPanel(
-                            condition = "input.selected_tab == 'parameters' & input.parameter_name == 'Species Valuation'",
-                            DT::dataTableOutput('x1'),
-                          ),
-                          
-                          conditionalPanel(
-                            condition = "input.selected_tab == 'constraints' & input.constraint_name == 'Survey Size'",
-                            DT::dataTableOutput('x2')
-                          ),
-                          
-                          conditionalPanel(
-                            condition = "input.selected_tab == 'constraints' & input.constraint_name == 'Totals'",
-                            DT::dataTableOutput('x4')
-                          ),
-                          
-                          width = 7
-                          
-                          
-                        )
+                          mainPanel(
+                            conditionalPanel(
+                              condition = "input.selected_tab == 'parameters' & input.parameter_name == 'Objective Criteria'",
+                              DT::dataTableOutput('x3'),
+                            ),
+                            conditionalPanel(
+                              condition = "input.selected_tab == 'parameters' & input.parameter_name == 'Species Valuation'",
+                              DT::dataTableOutput('x1'),
+                            ),
+                            
+                            conditionalPanel(
+                              condition = "input.selected_tab == 'constraints' & input.constraint_name == 'Survey Size'",
+                              DT::dataTableOutput('x2')
+                            ),
+                            
+                            conditionalPanel(
+                              condition = "input.selected_tab == 'constraints' & input.constraint_name == 'Totals'",
+                              DT::dataTableOutput('x4')
+                            ),
+
+                        width = 7
+                        
+                        
+                      )
                       )),
              tabPanel("Run the Optimizer", 
                       sidebarLayout(
@@ -155,8 +149,8 @@ ui = bootstrapPage(
                                        label = "Metric Options:",
                                        choices = 
                                          c("Survey Size and Cost Comparison" = "survy_size",
-                                           "Group Totals" = "group_total",
-                                           "Survey Valuation by Group" = "group_value")),
+                                         "Group Totals" = "group_total",
+                                         "Survey Valuation by Group" = "group_value")),
                           tags$br(),
                           downloadButton(
                             outputId = "download_btn",
@@ -166,11 +160,11 @@ ui = bootstrapPage(
                         ), 
                         mainPanel(
                           conditionalPanel(
-                            condition = "input.plot_select == 'survy_size'",
-                            HTML(paste0("<b>Optimized Solution Plot</b>")),
-                            plotOutput("optimized.solution.plot", height=600),
-                            HTML(paste0("<b>Optimized Solution Table</b>")),
-                            DT::dataTableOutput("optimized.solution"),
+                          condition = "input.plot_select == 'survy_size'",
+                          HTML(paste0("<b>Optimized Solution Plot</b>")),
+                          plotOutput("optimized.solution.plot", height=600),
+                          HTML(paste0("<b>Optimized Solution Table</b>")),
+                          DT::dataTableOutput("optimized.solution"),
                           ),
                           conditionalPanel(
                             condition = "input.plot_select == 'group_value'",
@@ -178,25 +172,25 @@ ui = bootstrapPage(
                             plotOutput("optimized.enterprise.score.plot", height=600),
                             HTML(paste0("<b>Optimized Solution Table</b>")),
                             DT::dataTableOutput("optimized.enterprise.score"),
-                          ),
-                          
-                          width = 7
+                            ),
+
+                                  width = 7
                         )
-                        
+
                         
                       ),
-             ), 
-             
-             
-             
+                      ), 
+                        
+              
+
              tabPanel("Compare Scenarios")
              
+             )
   )
-)
 
 # Define server logic required to draw a histogram
 server <- function(input, output, session) {
-  
+    
   ## This will create the original objective weights data frame that is rendered on the table to start 
   objective.weights = data.frame(values = c("commercial_value","recreational_value","ecosystem_value",
                                             "management_importantce",	"uniqueness"), 
@@ -204,9 +198,9 @@ server <- function(input, output, session) {
   
   ## This will create the original upper/ lower bounds data frame that is rendered on the table to start 
   bounds = data.frame(values =c("spring_trawl", "fall_trawl", "seamap_bll", "nmfs_bll", "camera_reef", "sum_plank_bongo",
-                                "sum_plan_neuston", "fall_plank_bongo", "fall_plank_neust", "nmfs_small_pelagics"), 
-                      lower.bound =  c(0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
-                      upper.bound = c(346, 302, 160, 165, 1494, 56, 56, 72, 72, 122))
+                                         "sum_plan_neuston", "fall_plank_bongo", "fall_plank_neust", "nmfs_small_pelagics"), 
+                       lower.bound =  c(0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
+                       upper.bound = c(346, 302, 160, 165, 1494, 56, 56, 72, 72, 122))
   
   ## This will create the original species valuation data frame that is rendered on the table to start 
   species.value = read.csv("data/species_value.csv") %>% 
@@ -378,7 +372,7 @@ server <- function(input, output, session) {
     survey.n = c(1000, 1000, 1000, 1000, 1500, 1000, 1000, 1000, 1000, 1000) # Helpful with optimization to start everything at 100 
     
     cost.per.survey = c(2910, 3414, 2830, 3600, 1871, 1854, 1854, 2555, 2555, 4172)
-    
+
     ## More constraints - this time it's cost constraints. They will be inequality constraints.   
     # NOTE - I'm not sure what the difference between "cost per" and "current cost" is on the sheet 
     
@@ -487,89 +481,89 @@ server <- function(input, output, session) {
   # Generating plots 
   ##################################################################################################################################################
   
-  output$optimized.solution <- DT::renderDataTable({
-    
-    #bounds.new$data
-    optimized.data() %>%
-      rbind(., data.frame(Survey="Total Number",
-                          Optimized.N=sum(optimized.data()$Optimized.N),
-                          Current.N=sum(optimized.data()$Current.N), 
-                          Optimized.Cost=sum(optimized.data()$Optimized.Cost),
-                          Current.Cost=sum(optimized.data()$Current.Cost))) %>%
-      datatable(rownames = T, # set rownames T
-                options = list(columnDefs = list(list(visible = F, targets = 0)),
-                               pageLength = 15, info = FALSE)) %>%
-      formatStyle(
-        0, target = "row",
-        fontWeight = styleEqual(11, "bold"))
-  })
-  
-  output$optimized.solution.plot <- renderPlot({
-    
-    optimized.data() %>% 
-      gather("Type","Survey Metric", -Survey) %>% 
-      dplyr::mutate(Metric = case_when(Type %in% c("Optimized.N", "Current.N") ~ "Number",
-                                       Type %in% c("Optimized.Cost", "Current.Cost") ~ "Cost ($)")) %>% 
-      dplyr::mutate(Type = case_when(Type %in% c("Optimized.N", "Optimized.Cost") ~ "Optimized",
-                                     Type %in% c("Current.N", "Current.Cost") ~ "Current")) %>% 
-      ggplot(aes(y=`Survey Metric`, x=Survey, fill=Type)) + 
-      geom_bar(stat="identity", position='dodge', color="black") + 
-      theme_half_open(12) + 
-      xlab("")+
-      facet_wrap(~Metric, nrow=2, scales="free_y")+
-      scale_fill_manual(values=c("gray","darkgreen"))+
-      theme(axis.text.x = element_text(angle = 45,hjust=1)) + 
-      theme(legend.position = "top", 
-            legend.title = element_blank())
-    
-  })
-  
-  output$optimized.enterprise.score <- DT::renderDataTable({
-    
-    #bounds.new$data
-    enterprise.score()  %>%
-      datatable(rownames = T, # set rownames T
-                options = list(columnDefs = list(list(visible = F, targets = 0)),
-                               pageLength = 15, info = FALSE))
-  })
-  
-  output$optimized.enterprise.score.plot <- renderPlot({ 
-    
-    enterprise.score() %>% 
-      ggplot(aes(x=Survey, y=enterprise.score, fill=Group)) + 
-      geom_bar(position="stack", stat="identity", color="black")+
-      theme_half_open(12) + 
-      xlab("")+
-      ylab("Enterprise Score")+
-      #scale_fill_manual(values=c("gray","darkgreen"))+
-      theme(axis.text.x = element_text(angle = 45,hjust=1)) + 
-      theme(legend.position = "top", 
-            legend.title = element_blank())
-    
-  })
-  
-  
-  output$download_btn <- downloadHandler(
-    #filename = function() {paste0(input$main, " vs ", input$control, " ", input$obRange[1], "-", input$obRange[2], ".xlsx")},
-    
-    filename = function() {paste("my_data_", Sys.Date(), ".xlsx", sep = "")},
-    content = function(file) {
+    output$optimized.solution <- DT::renderDataTable({
       
-      fname <- paste(file,"xlsx",sep=".")
-      wb <- createWorkbook("Survey_shinyapp", "Survey results")
-      addWorksheet(wb, sheetName = "model")
-      addWorksheet(wb, sheetName = "data")
-      writeData(wb, optimized.solution(), sheet = "model")
-      writeData(wb, optimized.solution(), sheet = "data")
-      saveWorkbook(wb, file = file)
+      #bounds.new$data
+      optimized.data() %>%
+        rbind(., data.frame(Survey="Total Number",
+                            Optimized.N=sum(optimized.data()$Optimized.N),
+                            Current.N=sum(optimized.data()$Current.N), 
+                            Optimized.Cost=sum(optimized.data()$Optimized.Cost),
+                            Current.Cost=sum(optimized.data()$Current.Cost))) %>%
+        datatable(rownames = T, # set rownames T
+                  options = list(columnDefs = list(list(visible = F, targets = 0)),
+                                 pageLength = 15, info = FALSE)) %>%
+        formatStyle(
+          0, target = "row",
+          fontWeight = styleEqual(11, "bold"))
+    })
+    
+    output$optimized.solution.plot <- renderPlot({
       
-    },
-    contentType = "file/xlsx"
-  )
-  
-  output$TEMP <- renderText({
-    paste0("x=", "Dumb")
-  })
+      optimized.data() %>% 
+        gather("Type","Survey Metric", -Survey) %>% 
+        dplyr::mutate(Metric = case_when(Type %in% c("Optimized.N", "Current.N") ~ "Number",
+                                         Type %in% c("Optimized.Cost", "Current.Cost") ~ "Cost ($)")) %>% 
+        dplyr::mutate(Type = case_when(Type %in% c("Optimized.N", "Optimized.Cost") ~ "Optimized",
+                                       Type %in% c("Current.N", "Current.Cost") ~ "Current")) %>% 
+        ggplot(aes(y=`Survey Metric`, x=Survey, fill=Type)) + 
+        geom_bar(stat="identity", position='dodge', color="black") + 
+        theme_half_open(12) + 
+        xlab("")+
+        facet_wrap(~Metric, nrow=2, scales="free_y")+
+        scale_fill_manual(values=c("gray","darkgreen"))+
+        theme(axis.text.x = element_text(angle = 45,hjust=1)) + 
+        theme(legend.position = "top", 
+              legend.title = element_blank())
+      
+    })
+    
+    output$optimized.enterprise.score <- DT::renderDataTable({
+      
+      #bounds.new$data
+      enterprise.score()  %>%
+        datatable(rownames = T, # set rownames T
+                  options = list(columnDefs = list(list(visible = F, targets = 0)),
+                                 pageLength = 15, info = FALSE))
+    })
+    
+    output$optimized.enterprise.score.plot <- renderPlot({ 
+      
+      enterprise.score() %>% 
+        ggplot(aes(x=Survey, y=enterprise.score, fill=Group)) + 
+        geom_bar(position="stack", stat="identity", color="black")+
+        theme_half_open(12) + 
+        xlab("")+
+        ylab("Enterprise Score")+
+        #scale_fill_manual(values=c("gray","darkgreen"))+
+        theme(axis.text.x = element_text(angle = 45,hjust=1)) + 
+        theme(legend.position = "top", 
+              legend.title = element_blank())
+      
+      })
+      
+ 
+    output$download_btn <- downloadHandler(
+      #filename = function() {paste0(input$main, " vs ", input$control, " ", input$obRange[1], "-", input$obRange[2], ".xlsx")},
+      
+      filename = function() {paste("my_data_", Sys.Date(), ".xlsx", sep = "")},
+      content = function(file) {
+        
+        fname <- paste(file,"xlsx",sep=".")
+        wb <- createWorkbook("Survey_shinyapp", "Survey results")
+        addWorksheet(wb, sheetName = "model")
+        addWorksheet(wb, sheetName = "data")
+        writeData(wb, optimized.solution(), sheet = "model")
+        writeData(wb, optimized.solution(), sheet = "data")
+        saveWorkbook(wb, file = file)
+        
+      },
+      contentType = "file/xlsx"
+    )
+    
+    output$TEMP <- renderText({
+      paste0("x=", "Dumb")
+    })
 }
 
 # Run the application 
