@@ -123,57 +123,22 @@ obj=function(survey.n){
 }
 
 
-opt.value=function(final.table){
-  
-  survey.names = c("spring_trawl", "fall_trawl", "seamap_bll", "nmfs_bll", "camera_reef", "sum_plank_bongo",
-                   "sum_plan_neuston", "fall_plank_bongo", "fall_plank_neust", "nmfs_small_pelagics")
-  
-  final.table$survey = survey.names
-  new.values = left_join(species.survey.freq.value, final.table[, c("Survey","survey","Optimized.N")], by="survey") %>% 
-    rowwise() %>% 
-    dplyr::mutate(enterprise.score = Optimized.N^(-1*power_param)) %>% 
-    dplyr::mutate(enterprise.score = freq_value * (1-enterprise.score) * 100) %>% 
-    dplyr::ungroup() %>% 
-    dplyr::select(Group, Survey, enterprise.score) %>% 
-    dplyr::group_by(Group, Survey) %>% 
-    dplyr::summarize(enterprise.score = sum(enterprise.score)) %>% 
-    dplyr::ungroup()
 
-  return(new.values)
-  
-}
-
-new.values %>% 
-  ggplot(aes(x=Survey, y=enterprise.score, fill=Group)) + 
-  geom_bar(position="stack", stat="identity", color="black")+
-  theme_half_open(12) + 
-  xlab("")+
-  ylab("Enterprise Score")+
-  #scale_fill_manual(values=c("gray","darkgreen"))+
-  theme(axis.text.x = element_text(angle = 45,hjust=1)) + 
-  theme(legend.position = "top", 
-        legend.title = element_blank())
-  
 
 survey.n = rep(1000, 10)
-survey.n = c(315, 275, 146, 150, 1359, 51, 51, 66, 66, 111)
+#survey.n = c(315, 275, 146, 150, 1359, 51, 51, 66, 66, 111)
 survey.size.current = c(315, 275, 146, 150, 1359, 51, 51, 66, 66, 111)
+cost.per.survey = c(2910, 3414, 2830, 3600, 1871, 1854, 1854, 2555, 2555, 4172)
 
 lower.bound = c(0, 0, 0, 0, 0, 0, 0, 0, 0, 0)
 upper.bound = c(346, 302, 160, 165, 1494, 56, 56, 72, 72, 122)
 
-upper.bound = c(500, 500, 160, 165, 1494, 56, 56, 72, 72, 122)
+upper.bound = c(450, 450, 450, 450, 1494, 450, 450, 450, 450, 450)
 
 
 result <- solnl(X = survey.n, objfun = obj, confun = con, 
                      lb = lower.bound, ub = upper.bound, 
                      tolFun = 1e-08, tolCon = 1e-08, maxnFun = 1e+011, maxIter = 8000)
-
-if(exists("result") == FALSE){
-  result <- solnl(X = rep(200, 10), objfun = obj, confun = con, 
-                  lb = lower.bound, ub = upper.bound, 
-                  tolFun = 1e-08, tolCon = 1e-08, maxnFun = 1e+011, maxIter = 8000)
-}
 
 
 
@@ -203,6 +168,43 @@ final.table %>%
   scale_fill_manual(values=c("gray","darkgreen"))+
   theme(axis.text.x = element_text(angle = 45,hjust=1))
 
+final.table$survey = survey.names
+new.values = left_join(species.survey.freq.value, final.table[, c("Survey","survey","Optimized.N")], by="survey") %>% 
+  rowwise() %>% 
+  dplyr::mutate(enterprise.score = Optimized.N^(-1*power_param)) %>% 
+  dplyr::mutate(enterprise.score = freq_value * (1-enterprise.score) * 100) %>% 
+  dplyr::ungroup() %>% 
+  dplyr::select(Group, Survey, enterprise.score) %>% 
+  dplyr::group_by(Group, Survey) %>% 
+  dplyr::summarize(enterprise.score = sum(enterprise.score)) %>% 
+  dplyr::ungroup()
+
+
+new.values %>% 
+  ggplot(aes(x=Survey, y=enterprise.score, fill=Group)) + 
+  geom_bar(position="stack", stat="identity", color="black")+
+  theme_half_open(12) + 
+  xlab("")+
+  ylab("Enterprise Score")+
+  #scale_fill_manual(values=c("gray","darkgreen"))+
+  theme(axis.text.x = element_text(angle = 45,hjust=1)) + 
+  theme(legend.position = "top", 
+        legend.title = element_blank())
+
+
+new.values %>% 
+  dplyr::group_by(Group) %>% 
+  dplyr::summarize(enterprise.score = sum(enterprise.score)) %>% 
+  dplyr::ungroup() %>% 
+  ggplot(aes(x=Group, y=enterprise.score, fill=Group)) + 
+  geom_bar(position="stack", stat="identity", color="black")+
+  theme_half_open(12) + 
+  xlab("")+
+  ylab("Enterprise Score")+
+  #scale_fill_manual(values=c("gray","darkgreen"))+
+  theme(axis.text.x = element_text(angle = 45,hjust=1)) + 
+  theme(legend.position = "top", 
+        legend.title = element_blank())
 
 
 
