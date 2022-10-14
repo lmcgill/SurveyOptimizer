@@ -155,8 +155,8 @@ ui = bootstrapPage(
                                        label = "Metric Options:",
                                        choices = 
                                          c("Survey Size and Cost Comparison" = "survy_size",
-                                           "Survey Valuation by Species Group" = "group_value", 
-                                           "Species Group Totals" = "group_total")),
+                                           "Species Group Totals" = "group_total", 
+                                           "Survey Valuation by Species Group" = "group_value")),
                           tags$br(),
                           downloadButton(
                             outputId = "download_btn",
@@ -383,7 +383,7 @@ server <- function(input, output, session) {
                      "sum_plan_neuston", "fall_plank_bongo", "fall_plank_neust", "nmfs_small_pelagics")
     survey.size.current = c(315, 275, 146, 150, 1359, 51, 51, 66, 66, 111)
     #survey.n = c(1, 1, 1, 1, 1, 1, 1, 1, 1, 1) 
-    survey.n = c(1000, 1000, 1000, 1000, 1500, 1000, 1000, 1000, 1000, 1000)
+    survey.n = c(1000, 1000, 1000, 1000, 1500, 1000, 1000, 1000, 1000, 1000)-100
     
     cost.per.survey = c(2910, 3414, 2830, 3600, 1871, 1854, 1854, 2555, 2555, 4172)
     
@@ -478,16 +478,20 @@ server <- function(input, output, session) {
     species.survey.freq.value = frequency.data()
     final.table.n = optimized.data()
     final.table.n$survey = survey.names
-    new.values = left_join(species.survey.freq.value, final.table.n[, c("Survey","survey","Optimized.N")], by="survey") %>% 
+    new.values = left_join(species.survey.freq.value, final.table.n[, c("Survey","survey","Optimized.N", "Current.N")], by="survey") %>% 
       rowwise() %>% 
-      dplyr::mutate(enterprise.score = Optimized.N^(-1*power_param)) %>% 
-      dplyr::mutate(enterprise.score = freq_value * (1-enterprise.score) * 100) %>% 
+      dplyr::mutate(Optimized.enterprise.score = Optimized.N^(-1*power_param)) %>% 
+      dplyr::mutate(Optimized.enterprise.score = freq_value * (1-Optimized.enterprise.score)*10) %>% 
+      dplyr::mutate(Current.enterprise.score = Current.N^(-1*power_param)) %>% 
+      dplyr::mutate(Current.enterprise.score = freq_value * (1-Current.enterprise.score)*10) %>% 
       dplyr::ungroup() %>% 
-      dplyr::select(Group, Survey, enterprise.score) %>% 
+      dplyr::select(Group, Survey, Optimized.enterprise.score, Current.enterprise.score) %>% 
       dplyr::group_by(Group, Survey) %>% 
-      dplyr::summarize(enterprise.score = sum(enterprise.score)) %>% 
+      dplyr::summarize(Optimized.enterprise.score = sum(Optimized.enterprise.score), 
+                       Current.enterprise.score = sum(Current.enterprise.score)) %>% 
       dplyr::ungroup() %>% 
-      dplyr::mutate(enterprise.score = round(enterprise.score, 2))
+      dplyr::mutate(Optimized.enterprise.score = round(Optimized.enterprise.score, 2)) %>%
+      dplyr::mutate(Current.enterprise.score = round(Current.enterprise.score, 2)) 
     
     return(new.values)
   })
@@ -544,7 +548,7 @@ server <- function(input, output, session) {
   output$optimized.enterprise.score.plot <- renderPlot({ 
     
     enterprise.score() %>% 
-      ggplot(aes(x=Survey, y=enterprise.score, fill=Group)) + 
+      ggplot(aes(x=Survey, y=Optimized.enterprise.score, fill=Group)) + 
       geom_bar(position="stack", stat="identity", color="black")+
       theme_half_open(12) + 
       xlab("")+
@@ -561,7 +565,8 @@ server <- function(input, output, session) {
     #bounds.new$data
     enterprise.score()  %>%
       dplyr::group_by(Group) %>% 
-      dplyr::summarize(enterprise.score = sum(enterprise.score)) %>% 
+      dplyr::summarize(Optimized.enterprise.score = sum(Optimized.enterprise.score), 
+                       Current.enterprise.score = sum(Current.enterprise.score)) %>% 
       dplyr::ungroup() %>% 
       datatable(rownames = T, # set rownames T
                 options = list(columnDefs = list(list(visible = F, targets = 0)),
@@ -572,17 +577,22 @@ server <- function(input, output, session) {
     
     enterprise.score() %>% 
       dplyr::group_by(Group) %>% 
-      dplyr::summarize(enterprise.score = sum(enterprise.score)) %>% 
+      dplyr::summarize(Optimized.enterprise.score = sum(Optimized.enterprise.score), 
+                       Current.enterprise.score = sum(Current.enterprise.score)) %>% 
       dplyr::ungroup() %>% 
-      ggplot(aes(x=Group, y=enterprise.score, fill=Group)) + 
-      geom_bar(position="stack", stat="identity", color="black")+
+      gather("Type","Enterprise Score", -Group) %>% 
+      dplyr::mutate(Type = case_when(Type %in% c("Optimized.enterprise.score") ~ "Optimized",
+                                     Type %in% c("Current.enterprise.score") ~ "Current")) %>% 
+      ggplot(aes(x=Group, y=`Enterprise Score`, fill=Type)) + 
+      geom_bar(position="dodge", stat="identity", color="black")+
       theme_half_open(12) + 
       xlab("")+
       ylab("Enterprise Score")+
-      #scale_fill_manual(values=c("gray","darkgreen"))+
+      scale_fill_manual(values=c("gray","darkgreen"))+
       theme(axis.text.x = element_text(angle = 45,hjust=1)) + 
       theme(legend.position = "top", 
             legend.title = element_blank())
+    
     
   })
 
