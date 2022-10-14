@@ -591,15 +591,19 @@ server <- function(input, output, session) {
   output$download_btn <- downloadHandler(
     #filename = function() {paste0(input$main, " vs ", input$control, " ", input$obRange[1], "-", input$obRange[2], ".xlsx")},
     
-    filename = function() {paste("my_data_", Sys.Date(), ".xlsx", sep = "")},
+    filename = function() {paste("SOM_results_", Sys.Date(), ".xlsx", sep = "")},
     content = function(file) {
       
       fname <- paste(file,"xlsx",sep=".")
       wb <- createWorkbook("Survey_shinyapp", "Survey results")
-      addWorksheet(wb, sheetName = "model")
+      addWorksheet(wb, sheetName = "objective_weights")
+      addWorksheet(wb, sheetName = "bounds")
+      addWorksheet(wb, sheetName = "totals")
       addWorksheet(wb, sheetName = "data")
-      writeData(wb, optimized.solution(), sheet = "model")
-      writeData(wb, optimized.solution(), sheet = "data")
+      writeData(wb, data.frame(objective.weights.new$data), sheet = "objective_weights")
+      writeData(wb,  data.frame(bounds.new$data), sheet = "bounds")
+      writeData(wb,  data.frame(totals.new$data), sheet = "totals")
+      writeData(wb, enterprise.score(), sheet = "data")
       saveWorkbook(wb, file = file)
       
     },
