@@ -184,7 +184,7 @@ ui = bootstrapPage(
                             HTML(paste0("<b>Optimized Solution Plot</b>")),
                             plotOutput("optimized.enterprise.totals.plot", height=600),
                             HTML(paste0("<b>Optimized Solution Table</b>")),
-                            DT::dataTableOutput("optimized.enterprise.plot"),
+                            DT::dataTableOutput("optimized.enterprise.totals"),
                           ),
                           
                           
