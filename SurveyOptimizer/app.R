@@ -126,6 +126,10 @@ ui = bootstrapPage(
                           ),
                           
                           conditionalPanel(
+                            condition = "input.selected_tab == 'parameters' & input.parameter_name == 'Species to Include'",
+                            DT::dataTableOutput('x5'),
+                          ),
+                          conditionalPanel(
                             condition = "input.selected_tab == 'constraints' & input.constraint_name == 'Survey Size'",
                             DT::dataTableOutput('x2')
                           ),
@@ -197,7 +201,20 @@ ui = bootstrapPage(
              
              
              
-             tabPanel("Compare Scenarios")
+             tabPanel("Compare Scenarios", 
+                      sidebarLayout(
+                        sidebarPanel(
+                          id = "sidebar",
+                          tags$h1("Compare Saved Scenarios"),
+                          tags$br(),
+                          HTML(paste0("Here you can upload your saved simulation results to compare key features of each.")),
+                          tags$br(),
+
+                          width = 5
+                          
+                        ), 
+                        mainPanel(width = 7)
+                        )), 
              
   )
 )
@@ -224,6 +241,18 @@ server <- function(input, output, session) {
   totals = data.frame(values = c("Total Cost","Total Survey Number"), 
                       totals = c(6866963, 2590))
   
+  ## This is %Freq_{species, survey} data - it does not change 
+  species.survey.freq = read.csv("data/species_pct_frequency.csv") %>% 
+    dplyr::mutate(species = tolower(species)) 
+  # Replace all NA values with 0 (NAs are the empty cells from the excel sheet)
+  species.survey.freq[is.na(species.survey.freq)] = 0
+  col_order <- c("Group", "species", "life_stage",
+                 "spring_trawl", "fall_trawl", "seamap_bll","nmfs_bll", "camera_reef", "sum_plank_bongo", "sum_plan_neuston", "fall_plank_bongo", 
+                 "fall_plank_neust", "nmfs_small_pelagics")
+  species.survey.freq = species.survey.freq[, col_order]
+  
+  ## This will create the include species data frame
+  species.include = species.survey.freq %>% mutate_if(is.numeric, ~1 * (. > 0)) 
   
   ##################################################################################################################################################
   # Reactive values for input 
@@ -241,6 +270,9 @@ server <- function(input, output, session) {
   
   totals.new = reactiveValues(data=totals)
   totals.original = totals
+  
+  species.include.new = reactiveValues(data=species.include)
+  species.include.original = species.include
   
   # This renders the datatable on the first page
   output$x2<-renderDT(
@@ -323,6 +355,27 @@ server <- function(input, output, session) {
     totals.new$data <- totals
   })
   
+  # This renders the datatable on the first page
+  output$x5 <- renderDT(
+    species.include.new$data,
+    selection = 'none',
+    editable = TRUE,
+    rownames = TRUE)
+  
+  # This updates and saves the new data 
+  observeEvent(input$x5_cell_edit, {
+    req(input$x5_cell_edit)
+    
+    # If you have a non-numeric edit, it messes up the optimization routine unless this is added (switches empties/character to zeros)
+    cell.edit.value = input$x5_cell_edit$value
+    if(is.numeric(cell.edit.value) == FALSE){cell.edit.value = 0}
+    
+    # Replace values with user input
+    species.include[input$x5_cell_edit$row,input$x5_cell_edit$col] <<- cell.edit.value
+    species.include.new$data <- species.include
+  })
+  
+  
   ##################################################################################################################################################
   # Getting data/ running optimization 
   ##################################################################################################################################################
@@ -336,7 +389,8 @@ server <- function(input, output, session) {
     species.value.new = data.frame(species.value.new$data) 
     max.cost =  data.frame(totals.new$data)[1,2]
     max.capacity = data.frame(totals.new$data)[2,2]
-    
+    species.include.new = data.frame(species.include.new$data) 
+      
     # Calculate the weighted average for each species 
     survey.value = species.value.new %>% 
       dplyr::mutate(species = tolower(species)) %>% 
@@ -349,22 +403,21 @@ server <- function(input, output, session) {
       dplyr::mutate(total_value = (sum(commercial_value, recreational_value, ecosystem_value, management_importantce, uniqueness))/sum(objective.weights.new$weights)) %>%  
       dplyr::ungroup()
     
-    # The %Freq_{species, survey} is determined by data that does not change 
-    species.survey.freq = read.csv("data/species_pct_frequency.csv") %>% 
-      dplyr::mutate(species = tolower(species)) 
-    # Replace all NA values with 0 (NAs are the empty cells from the excel sheet)
-    species.survey.freq[is.na(species.survey.freq)] = 0
-    
     # Open power parameter file 
     species.survey.power = read.csv("data/species_power_parameter.csv") %>% 
       dplyr::mutate(species = tolower(species)) %>% 
       gather("survey","power_param",-c(species, life_stage, Group))
     
+    # Gather the include file 
+    species.include.new =   species.include.new %>% 
+      gather("survey","include",-c(species, life_stage, Group)) 
+
     # Now we want to calculate the %Freq_{species, survey} * Value_{species}
     species.survey.freq.value = left_join(species.survey.freq, survey.value[, c("species", "life_stage","total_value")], by=c("species", "life_stage")) %>% 
       gather("survey","pct_freq",-c(species, life_stage, Group, total_value)) %>% 
       left_join(., species.survey.power, by=c("species", "life_stage", "Group", "survey")) %>% 
-      dplyr::mutate(freq_value = total_value * pct_freq) 
+      left_join(., species.include.new, by=c("species", "life_stage", "Group", "survey")) %>% 
+      dplyr::mutate(freq_value = total_value * pct_freq * include) 
     
     return(species.survey.freq.value)
   })
@@ -382,8 +435,8 @@ server <- function(input, output, session) {
     survey.names = c("spring_trawl", "fall_trawl", "seamap_bll", "nmfs_bll", "camera_reef", "sum_plank_bongo",
                      "sum_plan_neuston", "fall_plank_bongo", "fall_plank_neust", "nmfs_small_pelagics")
     survey.size.current = c(315, 275, 146, 150, 1359, 51, 51, 66, 66, 111)
-    #survey.n = c(1, 1, 1, 1, 1, 1, 1, 1, 1, 1) 
-    survey.n = c(1000, 1000, 1000, 1000, 1500, 1000, 1000, 1000, 1000, 1000)-100
+    survey.n = rep(10, 10)
+    #survey.n = c(1000, 1000, 1000, 1000, 1500, 1000, 1000, 1000, 1000, 1000)-100
     
     cost.per.survey = c(2910, 3414, 2830, 3600, 1871, 1854, 1854, 2555, 2555, 4172)
     
@@ -399,7 +452,7 @@ server <- function(input, output, session) {
     
     ## Objective function 
     # Objective function is %Freq_{survey, species}*Value_{species} * (1-survey.size^{-cv.param_{survey, species}})
-    # You need to multply objective function by 1000 to get a value that's not too sensitive
+    # You need to multiply objective function by 1000 to get a value that's not too sensitive
     
     obj=function(survey.n){
       
@@ -407,44 +460,44 @@ server <- function(input, output, session) {
                        "sum_plan_neuston", "fall_plank_bongo", "fall_plank_neust", "nmfs_small_pelagics")
       
       # Spring trawl 
-      spring.trawl.power = survey.n[1]^(-1 * species.survey.freq.value$power_param[species.survey.freq.value$survey == survey.names[1]])
-      spring.trawl.sum = sum(species.survey.freq.value$freq_value[species.survey.freq.value$survey == survey.names[1]] * (1-spring.trawl.power))* 100
+      spring.trawl.power = (survey.n[1]^(-1 * species.survey.freq.value$power_param[species.survey.freq.value$survey == survey.names[1]]))
+      spring.trawl.sum = sum(species.survey.freq.value$freq_value[species.survey.freq.value$survey == survey.names[1]] * (1-spring.trawl.power)* 100000)
       
       # Fall trawl 
-      fall.trawl.power = survey.n[2]^(-1 * species.survey.freq.value$power_param[species.survey.freq.value$survey == survey.names[2]])
-      fall.trawl.sum = sum(species.survey.freq.value$freq_value[species.survey.freq.value$survey == survey.names[2]] * (1-fall.trawl.power))* 100
+      fall.trawl.power = (survey.n[2]^(-1 * species.survey.freq.value$power_param[species.survey.freq.value$survey == survey.names[2]]))
+      fall.trawl.sum = sum(species.survey.freq.value$freq_value[species.survey.freq.value$survey == survey.names[2]] * (1-fall.trawl.power)* 100000)
       
       # Seamap BLL 
-      seamap.bll.power = survey.n[3]^(-1 * species.survey.freq.value$power_param[species.survey.freq.value$survey == survey.names[3]])
-      seamap.bll.sum = sum(species.survey.freq.value$freq_value[species.survey.freq.value$survey == survey.names[3]] * (1-seamap.bll.power))* 100
+      seamap.bll.power = (survey.n[3]^(-1 * species.survey.freq.value$power_param[species.survey.freq.value$survey == survey.names[3]]))
+      seamap.bll.sum = sum(species.survey.freq.value$freq_value[species.survey.freq.value$survey == survey.names[3]] * (1-seamap.bll.power)* 100000)
       
       # NMFS BLL 
-      nmfs.bll.power = survey.n[4]^(-1 * species.survey.freq.value$power_param[species.survey.freq.value$survey == survey.names[4]])
-      nmfs.bll.sum = sum(species.survey.freq.value$freq_value[species.survey.freq.value$survey == survey.names[4]] * (1-nmfs.bll.power))* 100
+      nmfs.bll.power = (survey.n[4]^(-1 * species.survey.freq.value$power_param[species.survey.freq.value$survey == survey.names[4]]))
+      nmfs.bll.sum = sum(species.survey.freq.value$freq_value[species.survey.freq.value$survey == survey.names[4]] * (1-nmfs.bll.power)* 100000)
       
       # Camera Reef 
-      camera.reef.power = survey.n[5]^(-1 * species.survey.freq.value$power_param[species.survey.freq.value$survey == survey.names[5]])
-      camera.reef.sum = sum(species.survey.freq.value$freq_value[species.survey.freq.value$survey == survey.names[5]] * (1-camera.reef.power))* 100
+      camera.reef.power = (survey.n[5]^(-1 * species.survey.freq.value$power_param[species.survey.freq.value$survey == survey.names[5]]))
+      camera.reef.sum = sum(species.survey.freq.value$freq_value[species.survey.freq.value$survey == survey.names[5]] * (1-camera.reef.power)* 100000)
       
       # Sum Plank Bongo 
-      sum.plank.bongo.power = survey.n[6]^(-1 * species.survey.freq.value$power_param[species.survey.freq.value$survey == survey.names[6]])
-      sum.plank.bongo.sum = sum(species.survey.freq.value$freq_value[species.survey.freq.value$survey == survey.names[6]] * (1-sum.plank.bongo.power))* 100
+      sum.plank.bongo.power = (survey.n[6]^(-1 * species.survey.freq.value$power_param[species.survey.freq.value$survey == survey.names[6]]))
+      sum.plank.bongo.sum = sum(species.survey.freq.value$freq_value[species.survey.freq.value$survey == survey.names[6]] * (1-sum.plank.bongo.power)* 100000)
       
       # Sum Plan Neuston 
-      sum.plan.neuston.power = survey.n[7]^(-1 * species.survey.freq.value$power_param[species.survey.freq.value$survey == survey.names[7]])
-      sum.plan.neuston.sum = sum(species.survey.freq.value$freq_value[species.survey.freq.value$survey == survey.names[7]] * (1-sum.plan.neuston.power))* 100
+      sum.plan.neuston.power = (survey.n[7]^(-1 * species.survey.freq.value$power_param[species.survey.freq.value$survey == survey.names[7]]))
+      sum.plan.neuston.sum = sum(species.survey.freq.value$freq_value[species.survey.freq.value$survey == survey.names[7]] * (1-sum.plan.neuston.power)* 100000)
       
       # Fall Plank Bongo
-      fall.plank.bongo.power = survey.n[8]^(-1 * species.survey.freq.value$power_param[species.survey.freq.value$survey == survey.names[8]])
-      fall.plank.bongo.sum = sum(species.survey.freq.value$freq_value[species.survey.freq.value$survey == survey.names[8]] * (1-fall.plank.bongo.power))* 100
+      fall.plank.bongo.power = (survey.n[8]^(-1 * species.survey.freq.value$power_param[species.survey.freq.value$survey == survey.names[8]]))
+      fall.plank.bongo.sum = sum(species.survey.freq.value$freq_value[species.survey.freq.value$survey == survey.names[8]] * (1-fall.plank.bongo.power)* 100000)
       
       # Fall Plank Neust
-      fall.plank.neust.power = survey.n[9]^(-1 * species.survey.freq.value$power_param[species.survey.freq.value$survey == survey.names[9]])
-      fall.plank.neust.sum = sum(species.survey.freq.value$freq_value[species.survey.freq.value$survey == survey.names[9]] * (1-fall.plank.neust.power))* 100
+      fall.plank.neust.power = (survey.n[9]^(-1 * species.survey.freq.value$power_param[species.survey.freq.value$survey == survey.names[9]])) 
+      fall.plank.neust.sum = sum(species.survey.freq.value$freq_value[species.survey.freq.value$survey == survey.names[9]] * (1-fall.plank.neust.power)* 100000)
       
       # NMFS Small Pelagics 
-      nmfs.small.pelagics.power = survey.n[10]^(-1 * species.survey.freq.value$power_param[species.survey.freq.value$survey == survey.names[10]])
-      nmfs.small.pelagics.sum = sum(species.survey.freq.value$freq_value[species.survey.freq.value$survey == survey.names[10]] * (1-nmfs.small.pelagics.power)) * 100
+      nmfs.small.pelagics.power = (survey.n[10]^(-1 * species.survey.freq.value$power_param[species.survey.freq.value$survey == survey.names[10]])) 
+      nmfs.small.pelagics.sum = sum(species.survey.freq.value$freq_value[species.survey.freq.value$survey == survey.names[10]] * (1-nmfs.small.pelagics.power)* 100000) 
       
       return(-sum(spring.trawl.sum, fall.trawl.sum, 
                   seamap.bll.sum, nmfs.bll.sum, 
@@ -457,7 +510,7 @@ server <- function(input, output, session) {
     
     result <- solnl(X = survey.n, objfun = obj, confun = con, 
                     lb = lower.bound, ub = upper.bound, 
-                    tolFun = 1e-08, tolCon = 1e-08, maxnFun = 1e+011, maxIter = 8000)
+                    tolFun = 1e-08, tolCon = 1e-08, maxnFun = 1e+08, maxIter = 8000, tolX = 1e-07)
     
     
     final.table = data.frame(Survey=c("Spring Trawl","Fall Trawl","Seamap BLL", "NMFS BLL",
@@ -480,10 +533,10 @@ server <- function(input, output, session) {
     final.table.n$survey = survey.names
     new.values = left_join(species.survey.freq.value, final.table.n[, c("Survey","survey","Optimized.N", "Current.N")], by="survey") %>% 
       rowwise() %>% 
-      dplyr::mutate(Optimized.enterprise.score = Optimized.N^(-1*power_param)) %>% 
-      dplyr::mutate(Optimized.enterprise.score = freq_value * (1-Optimized.enterprise.score)*10) %>% 
-      dplyr::mutate(Current.enterprise.score = Current.N^(-1*power_param)) %>% 
-      dplyr::mutate(Current.enterprise.score = freq_value * (1-Current.enterprise.score)*10) %>% 
+      dplyr::mutate(Optimized.enterprise.score = log(Optimized.N^(-1*power_param))) %>% 
+      dplyr::mutate(Optimized.enterprise.score = freq_value * (1-Optimized.enterprise.score)) %>% 
+      dplyr::mutate(Current.enterprise.score = log(Current.N^(-1*power_param))) %>% 
+      dplyr::mutate(Current.enterprise.score = freq_value * (1-Current.enterprise.score)) %>% 
       dplyr::ungroup() %>% 
       dplyr::select(Group, Survey, Optimized.enterprise.score, Current.enterprise.score) %>% 
       dplyr::group_by(Group, Survey) %>% 
