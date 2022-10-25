@@ -1,4 +1,4 @@
-﻿species,life_stage,spring_trawl,fall_trawl,seamap_bll,nmfs_bll,camera_reef,sum_plank_bongo,sum_plan_neuston,fall_plank_bongo,fall_plank_neust,nmfs_small_pelagics,Group
+﻿species,life_stage,summer_trawl,fall_trawl,seamap_bll,nmfs_bll,camera_reef,sum_plank_bongo,sum_plank_neuston,fall_plank_bongo,fall_plank_neust,nmfs_small_pelagics,Group
 Almaco jack,Adult,0.137955887,0.19,0.544981004,0.082297437,0.542227992,0,0,0,0,0.085472796,Amberjacks
 Banded rudderfish,Adult,0.351615599,0,0.091050956,0,0.120264274,0,0,0,0,0.095776751,Amberjacks
 Greater Amberjack,Adult,0.337678327,0.38,0.545096359,0.1,0.544514574,0,0,0,0,0.202949654,Amberjacks
@@ -94,7 +94,7 @@ Blackfin Tuna,Adult,0,0,0,0.03,0,0,0,0,0,0,Tuna
 Bluefin Tuna,Adult,0,0,0,0.078065635,0,0.542086908,0.536641078,0,0,0,Tuna
 Skipjack Tuna,Adult,0,0,0,0,0,0.545199611,0.538174384,0.494036513,0.264123265,0,Tuna
 Yellowfin Tuna,Adult,0,0,0,0.078065635,0,0,0,0,0,0,Tuna
-Almaco jack,Juvenille,0.137955887,0.193570927,0.544981004,1.11568E-16,0.542227992,0,0,0,0,0.085472796,Amberjacks
+Almaco jack,Juvenille,0.137955887,0.193570927,0.544981004,1.12E-16,0.542227992,0,0,0,0,0.085472796,Amberjacks
 Banded rudderfish,Juvenille,0.351615599,0,0.091050956,0,0.120264274,0,0,0,0,0.095776751,Amberjacks
 Greater Amberjack,Juvenille,0.337678327,0.383411389,0.545096359,0.097195762,0.544514574,0,0,0,0,0.202949654,Amberjacks
 Lesser Amberjack,Juvenille,0.093339544,0.010891685,0.273525122,0.004417379,0.185906008,0,0,0,0,0.090526272,Amberjacks
@@ -186,6 +186,6 @@ Snowy,Juvenille,0.1668241,0.187254835,0.093023652,0.150505289,0.079442872,0,0,0,
 Warsaw ,Juvenille,0.012900278,0.045160634,0.097070627,0.141081052,0.077991605,0,0,0,0,0.087988679,Tilefish_Deepwater_Grouper
 Bigeye Tuna,Juvenille,0,0,0,0,0,0,0,0,0,0,Tuna
 Blackfin Tuna,Juvenille,0,0,0,0.02543393,0,0,0,0,0,0,Tuna
-Bluefin Tuna,Juvenille,0,0,0,1.50922E-16,0,0.542086908,0.536641078,0,0,0,Tuna
+Bluefin Tuna,Juvenille,0,0,0,1.51E-16,0,0.542086908,0.536641078,0,0,0,Tuna
 Skipjack Tuna,Juvenille,0,0,0,0,0,0.545199611,0.538174384,0.494036513,0.264123265,0,Tuna
-Yellowfin Tuna,Juvenille,0,0,0,8.4442E-17,0,0,0,0,0,0,Tuna
+Yellowfin Tuna,Juvenille,0,0,0,8.44E-17,0,0,0,0,0,0,Tuna
