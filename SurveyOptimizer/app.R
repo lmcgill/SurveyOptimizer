@@ -38,9 +38,9 @@ dt_output = function(title, id) {
 # Define UI for application that draws a histogram
 ui = bootstrapPage(
   navbarPage(theme = shinytheme("flatly"), collapsible = TRUE,
-             HTML('<a style="text-decoration:none;cursor:default;color:#FFFFFF;" class="active" href="#">Survey Optimizer</a>'), id="nav",
+             HTML('<a style="text-decoration:none;cursor:default;color:#FFFFFF;" class="active" href="#">Survey Optimizer (in development)</a>'), id="nav",
              # Specify titles and that we want multiple panels 
-             windowTitle = "Survey Optimizer",
+             windowTitle = "Survey Optimizer (in development)",
              
              tabPanel("Optimizer Details", 
                       sidebarLayout(
@@ -49,7 +49,7 @@ ui = bootstrapPage(
                           tags$h2(HTML(paste0("The <b>Survey Optimizer Model</b> allocates sampling effort 
                           across the following Gulf of Mexico fisheries surveys to maximize insights and meet management objectives:")), style={'color:#045a8d'}), 
                           tags$h4(HTML(paste0(
-                            "<ul><li>Camera/ Reef</li><li>SEAMAP Spring Trawl</li><li>SEAMAP Fall Trawl</li><li>SEAMAP Bottom Longline</li><li>SEAMAP Summer Plankton Bongo</li>
+                            "<ul><li>Camera/ Reef</li><li>SEAMAP Summer Trawl</li><li>SEAMAP Fall Trawl</li><li>SEAMAP Bottom Longline</li><li>SEAMAP Summer Plankton Bongo</li>
                             <li>SEAMAP Summer Plankton Neuston</li><li>SEAMAP Fall Plankton Bongo</li><li>SEAMAP Fall Plankton Neuston</li>
                             <li>NMFS Bottom Longline</li><li>NMFS Small Pelagics</li></ul>"
                           )), style={'color:#045a8d'}), #
@@ -57,29 +57,25 @@ ui = bootstrapPage(
                           
                         ), 
                         mainPanel(
-                          tags$h3(HTML(paste0("<b>How it works (this needs to be modified)</b>"))),
+                          tags$h3(HTML(paste0("<b>How it works</b>"))),
                           HTML(paste0(
-                            "<p>The optimization routine seeks to maximize the <b>Enterprise Score</b>, which is a combination of multiple, weighted objective criteria, 
-                                     by modifying the number of each type of survey. Each survey has a specific value according to the frequency which it encounters a fish 
-                                     and the CV (a function of sample size). Low frequencies and high CVs lead to a lower valuation. Constraints are the total cost, total 
-                                     capacity, and the capacity for each specific type of survey. 
-                                     The <b>Objective Criteria</b> consist of management objectives that are weighted to reflect high level prioritization for the agency. It works by first assigning
-                                     a value to each species representing their importance to each of the weighted management criteria, which then factors into a
-                                     valuation of each survey. The species-survey values are discounted by frequency of occurrence and the CV in each fleet, which
-                                     is related to sample size using a simple power function.  This allows changes in sample size to affect the CV, and therefore
-                                     factors into the species and survey valuation and optimization. </p><p>
-                                     Values are summed across species and fleets for a combined
-                                     enterprise value, or score, for which to optimize. Optimization is done by adjusting survey sample sizes to maximize the enterprise
-                                     score, subject to logistic constraints (ship days available) and financial constraints (costs).  This SOM highlights the tradeoffs
-                                     associated with achieving different management goals, namely  commercial, recreational, ecosystem,  management importance and
-                                     uniqueness(of the species specific data) criteria.</p><p>
-                                     The logistical and financial constraints and can be set at any levels, median values
-                                     for a range of years are included, as well as calculated % increases of 10% 25% and 50%.
-                                     Overall survey values are based on the inclusion of the various species, which can be excluded, either as adults, juveniles or both.</p><p>
-                                     Currently all values are in draft stage, and technical documentation on the provenance of the values is under development.  </p>"
+                            "<p>The survey optimization model (SOM) seeks to maximize the <b>Enterprise Score</b>, by modifying the number sets pertaining of each survey. 
+                            This is dependent on which is a combination of multiple, weighted objective criteria, which can be set by the user.</p><p>
+                            Each survey has a specific value according to the frequency which it encounters a fish and the CV (a function of sample size).</p><p>
+                            Low frequencies and high CVs lead to a lower valuation. Constraints are the total cost, total capacity, and the capacity for each specific type of survey.</p><p>
+                            The <b>Objective Criteria</b> consist of management objectives that can weighted to reflect high level prioritization for different management objectives. 
+                            It works by first assigning a value to each species representing their importance to each of the weighted management criteria, which then factors into a valuation of each survey.</p><p>
+                            The species-survey values are discounted by frequency of occurrence and the CV in each fleet, which is related to sample size using a simple power function. 
+                            This allows changes in sample size to affect the CV, and therefore factors into the species and survey valuation and optimization.</p><p>
+                            Values are summed across species and fleets for a combined enterprise value, or score, for which to optimize. Optimization is done by 
+                            adjusting survey sample sizes to maximize the enterprise score, subject to logistic constraints (i.e. maximum sets per survey) and financial constraints (costs). 
+                            This SOM highlights the tradeoffs associated with achieving different management goals, namely commercial, recreational, ecosystem, management importance and 
+                            uniqueness(of the species specific data) criteria.</p><p>
+                            The logistical and financial constraints and can be set at any levels, median values for a range of years are included, as well as calculated % increases of 10%, 25%, and 50%. 
+                            Overall survey values are based on the inclusion of the various species, which can be excluded, either as adults, juveniles or both.</p>"
                           )),
                           #tags$br(),
-                          tags$h3(HTML(paste0("<b>Example</b>"))),
+                          #tags$h3(HTML(paste0("<b>Example</b>"))),
                           width = 7
                           
                           
@@ -228,8 +224,8 @@ server <- function(input, output, session) {
                                  weights = c(1,1,1,1,1))
   
   ## This will create the original upper/ lower bounds data frame that is rendered on the table to start 
-  bounds = data.frame(values =c("spring_trawl", "fall_trawl", "seamap_bll", "nmfs_bll", "camera_reef", "sum_plank_bongo",
-                                "sum_plan_neuston", "fall_plank_bongo", "fall_plank_neust", "nmfs_small_pelagics"), 
+  bounds = data.frame(values =c("summer_trawl", "fall_trawl", "seamap_bll", "nmfs_bll", "camera_reef", "sum_plank_bongo",
+                                "sum_plank_neuston", "fall_plank_bongo", "fall_plank_neust", "nmfs_small_pelagics"), 
                       lower.bound =  c(0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
                       upper.bound = c(346, 302, 160, 165, 1494, 56, 56, 72, 72, 122))
   
@@ -247,7 +243,7 @@ server <- function(input, output, session) {
   # Replace all NA values with 0 (NAs are the empty cells from the excel sheet)
   species.survey.freq[is.na(species.survey.freq)] = 0
   col_order <- c("Group", "species", "life_stage",
-                 "spring_trawl", "fall_trawl", "seamap_bll","nmfs_bll", "camera_reef", "sum_plank_bongo", "sum_plan_neuston", "fall_plank_bongo", 
+                 "summer_trawl", "fall_trawl", "seamap_bll","nmfs_bll", "camera_reef", "sum_plank_bongo", "sum_plank_neuston", "fall_plank_bongo", 
                  "fall_plank_neust", "nmfs_small_pelagics")
   species.survey.freq = species.survey.freq[, col_order]
   
@@ -432,10 +428,9 @@ server <- function(input, output, session) {
     
     species.survey.freq.value = frequency.data()
     
-    survey.names = c("spring_trawl", "fall_trawl", "seamap_bll", "nmfs_bll", "camera_reef", "sum_plank_bongo",
-                     "sum_plan_neuston", "fall_plank_bongo", "fall_plank_neust", "nmfs_small_pelagics")
+    survey.names = c("summer_trawl", "fall_trawl", "seamap_bll", "nmfs_bll", "camera_reef", "sum_plank_bongo",
+                     "sum_plank_neuston", "fall_plank_bongo", "fall_plank_neust", "nmfs_small_pelagics")
     survey.size.current = c(315, 275, 146, 150, 1359, 51, 51, 66, 66, 111)
-    survey.n = rep(10, 10)
     #survey.n = c(1000, 1000, 1000, 1000, 1500, 1000, 1000, 1000, 1000, 1000)-100
     
     cost.per.survey = c(2910, 3414, 2830, 3600, 1871, 1854, 1854, 2555, 2555, 4172)
@@ -456,48 +451,49 @@ server <- function(input, output, session) {
     
     obj=function(survey.n){
       
-      survey.names = c("spring_trawl", "fall_trawl", "seamap_bll", "nmfs_bll", "camera_reef", "sum_plank_bongo",
-                       "sum_plan_neuston", "fall_plank_bongo", "fall_plank_neust", "nmfs_small_pelagics")
+      survey.names = c("summer_trawl", "fall_trawl", "seamap_bll", "nmfs_bll", "camera_reef", "sum_plank_bongo",
+                       "sum_plank_neuston", "fall_plank_bongo", "fall_plank_neust", "nmfs_small_pelagics")
       
-      # Spring trawl 
+      constant.multiplier = 10000
+      # Summer trawl 
       spring.trawl.power = (survey.n[1]^(-1 * species.survey.freq.value$power_param[species.survey.freq.value$survey == survey.names[1]]))
-      spring.trawl.sum = sum(species.survey.freq.value$freq_value[species.survey.freq.value$survey == survey.names[1]] * (1-spring.trawl.power)* 100000)
+      spring.trawl.sum = sum(species.survey.freq.value$freq_value[species.survey.freq.value$survey == survey.names[1]] * (1-spring.trawl.power)* constant.multiplier)
       
       # Fall trawl 
       fall.trawl.power = (survey.n[2]^(-1 * species.survey.freq.value$power_param[species.survey.freq.value$survey == survey.names[2]]))
-      fall.trawl.sum = sum(species.survey.freq.value$freq_value[species.survey.freq.value$survey == survey.names[2]] * (1-fall.trawl.power)* 100000)
+      fall.trawl.sum = sum(species.survey.freq.value$freq_value[species.survey.freq.value$survey == survey.names[2]] * (1-fall.trawl.power)* constant.multiplier)
       
       # Seamap BLL 
       seamap.bll.power = (survey.n[3]^(-1 * species.survey.freq.value$power_param[species.survey.freq.value$survey == survey.names[3]]))
-      seamap.bll.sum = sum(species.survey.freq.value$freq_value[species.survey.freq.value$survey == survey.names[3]] * (1-seamap.bll.power)* 100000)
+      seamap.bll.sum = sum(species.survey.freq.value$freq_value[species.survey.freq.value$survey == survey.names[3]] * (1-seamap.bll.power)* constant.multiplier)
       
       # NMFS BLL 
       nmfs.bll.power = (survey.n[4]^(-1 * species.survey.freq.value$power_param[species.survey.freq.value$survey == survey.names[4]]))
-      nmfs.bll.sum = sum(species.survey.freq.value$freq_value[species.survey.freq.value$survey == survey.names[4]] * (1-nmfs.bll.power)* 100000)
+      nmfs.bll.sum = sum(species.survey.freq.value$freq_value[species.survey.freq.value$survey == survey.names[4]] * (1-nmfs.bll.power)* constant.multiplier)
       
       # Camera Reef 
       camera.reef.power = (survey.n[5]^(-1 * species.survey.freq.value$power_param[species.survey.freq.value$survey == survey.names[5]]))
-      camera.reef.sum = sum(species.survey.freq.value$freq_value[species.survey.freq.value$survey == survey.names[5]] * (1-camera.reef.power)* 100000)
+      camera.reef.sum = sum(species.survey.freq.value$freq_value[species.survey.freq.value$survey == survey.names[5]] * (1-camera.reef.power)* constant.multiplier)
       
       # Sum Plank Bongo 
       sum.plank.bongo.power = (survey.n[6]^(-1 * species.survey.freq.value$power_param[species.survey.freq.value$survey == survey.names[6]]))
-      sum.plank.bongo.sum = sum(species.survey.freq.value$freq_value[species.survey.freq.value$survey == survey.names[6]] * (1-sum.plank.bongo.power)* 100000)
+      sum.plank.bongo.sum = sum(species.survey.freq.value$freq_value[species.survey.freq.value$survey == survey.names[6]] * (1-sum.plank.bongo.power)* constant.multiplier)
       
       # Sum Plan Neuston 
       sum.plan.neuston.power = (survey.n[7]^(-1 * species.survey.freq.value$power_param[species.survey.freq.value$survey == survey.names[7]]))
-      sum.plan.neuston.sum = sum(species.survey.freq.value$freq_value[species.survey.freq.value$survey == survey.names[7]] * (1-sum.plan.neuston.power)* 100000)
+      sum.plan.neuston.sum = sum(species.survey.freq.value$freq_value[species.survey.freq.value$survey == survey.names[7]] * (1-sum.plan.neuston.power)* constant.multiplier)
       
       # Fall Plank Bongo
       fall.plank.bongo.power = (survey.n[8]^(-1 * species.survey.freq.value$power_param[species.survey.freq.value$survey == survey.names[8]]))
-      fall.plank.bongo.sum = sum(species.survey.freq.value$freq_value[species.survey.freq.value$survey == survey.names[8]] * (1-fall.plank.bongo.power)* 100000)
+      fall.plank.bongo.sum = sum(species.survey.freq.value$freq_value[species.survey.freq.value$survey == survey.names[8]] * (1-fall.plank.bongo.power)* constant.multiplier)
       
       # Fall Plank Neust
       fall.plank.neust.power = (survey.n[9]^(-1 * species.survey.freq.value$power_param[species.survey.freq.value$survey == survey.names[9]])) 
-      fall.plank.neust.sum = sum(species.survey.freq.value$freq_value[species.survey.freq.value$survey == survey.names[9]] * (1-fall.plank.neust.power)* 100000)
+      fall.plank.neust.sum = sum(species.survey.freq.value$freq_value[species.survey.freq.value$survey == survey.names[9]] * (1-fall.plank.neust.power)* constant.multiplier)
       
       # NMFS Small Pelagics 
       nmfs.small.pelagics.power = (survey.n[10]^(-1 * species.survey.freq.value$power_param[species.survey.freq.value$survey == survey.names[10]])) 
-      nmfs.small.pelagics.sum = sum(species.survey.freq.value$freq_value[species.survey.freq.value$survey == survey.names[10]] * (1-nmfs.small.pelagics.power)* 100000) 
+      nmfs.small.pelagics.sum = sum(species.survey.freq.value$freq_value[species.survey.freq.value$survey == survey.names[10]] * (1-nmfs.small.pelagics.power)* constant.multiplier) 
       
       return(-sum(spring.trawl.sum, fall.trawl.sum, 
                   seamap.bll.sum, nmfs.bll.sum, 
@@ -507,13 +503,21 @@ server <- function(input, output, session) {
                   nmfs.small.pelagics.sum))
       
     }
-    
-    result <- solnl(X = survey.n, objfun = obj, confun = con, 
+
+    result <- solnl(X = rep(10, 10), objfun = obj, confun = con, 
                     lb = lower.bound, ub = upper.bound, 
+                    #tolFun = 0.000001, tolCon = 0.000001, maxnFun = 1e+08, tolX = 0.000001, maxIter = 100000)
                     tolFun = 1e-08, tolCon = 1e-08, maxnFun = 1e+08, maxIter = 8000, tolX = 1e-07)
     
+    # Initial survey numbers can impact the optimizer (solnl)
+    if(exists("result") == FALSE){
+      result <- solnl(X = rep(100, 10), objfun = obj, confun = con, 
+                      lb = lower.bound, ub = upper.bound, 
+                      tolFun = 0.000001, tolCon = 0.000001, maxnFun = 1e+08, tolX = 0.000001, maxIter = 100000)
+       
+    }
     
-    final.table = data.frame(Survey=c("Spring Trawl","Fall Trawl","Seamap BLL", "NMFS BLL",
+    final.table = data.frame(Survey=c("Summer Trawl","Fall Trawl","Seamap BLL", "NMFS BLL",
                                       "Camera Reef","Summer Plankton Bongo","Summer Plankton Neust",
                                       "Fall Plankton Bongo","Fall Plankton Neust","NMFS Small Pelagics"), 
                              Optimized.N = round(result$par, digits=0), 
@@ -525,17 +529,17 @@ server <- function(input, output, session) {
   })
   
   enterprise.score <- reactive({
-    survey.names = c("spring_trawl", "fall_trawl", "seamap_bll", "nmfs_bll", "camera_reef", "sum_plank_bongo",
-                     "sum_plan_neuston", "fall_plank_bongo", "fall_plank_neust", "nmfs_small_pelagics")
+    survey.names = c("summer_trawl", "fall_trawl", "seamap_bll", "nmfs_bll", "camera_reef", "sum_plank_bongo",
+                     "sum_plank_neuston", "fall_plank_bongo", "fall_plank_neust", "nmfs_small_pelagics")
     
     species.survey.freq.value = frequency.data()
     final.table.n = optimized.data()
     final.table.n$survey = survey.names
     new.values = left_join(species.survey.freq.value, final.table.n[, c("Survey","survey","Optimized.N", "Current.N")], by="survey") %>% 
       rowwise() %>% 
-      dplyr::mutate(Optimized.enterprise.score = log(Optimized.N^(-1*power_param))) %>% 
+      dplyr::mutate(Optimized.enterprise.score = (Optimized.N^(-1*power_param))) %>% 
       dplyr::mutate(Optimized.enterprise.score = freq_value * (1-Optimized.enterprise.score)) %>% 
-      dplyr::mutate(Current.enterprise.score = log(Current.N^(-1*power_param))) %>% 
+      dplyr::mutate(Current.enterprise.score = (Current.N^(-1*power_param))) %>% 
       dplyr::mutate(Current.enterprise.score = freq_value * (1-Current.enterprise.score)) %>% 
       dplyr::ungroup() %>% 
       dplyr::select(Group, Survey, Optimized.enterprise.score, Current.enterprise.score) %>% 
