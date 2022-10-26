@@ -225,7 +225,7 @@ ui = bootstrapPage(
                           fileInput("fifth_file",
                                     label="Scenario 5: Choose Optimized Output",
                                     multiple = FALSE),
-                          checkboxGroupInput("datasetSelector","Data Files", choices=c("Baseline")),
+                          #checkboxGroupInput("datasetSelector","Data Files", choices=c("Baseline")),
 
                           width = 5
                           
@@ -233,7 +233,8 @@ ui = bootstrapPage(
                         mainPanel(HTML(paste0("<b>Survey Size Comparison Plot</b>")),
                                   plotOutput("optimized.numbers.comparison", height=600), 
                                   HTML(paste0("<b>Enterprise Score Comparison Plot</b>")),
-                                  uiOutput("plot.ui"),
+                                  plotOutput("optimized.enterprise.comparison", height=600), 
+                                  #uiOutput("plot.ui"),
                                   width = 7)
                         )), 
              
@@ -785,22 +786,43 @@ server <- function(input, output, session) {
     
     as.data.frame(bind_rows(optimized_enterprise(), .id = "column_label")) %>% 
       dplyr::rename("Scenario" = "column_label") %>% 
-      ggplot(aes(x=Survey, y=Optimized.enterprise.score, fill=Group)) + 
-      geom_bar(position="stack", stat="identity", color="black")+
+      dplyr::group_by(Group, Scenario) %>% 
+      dplyr::summarize(Optimized.enterprise.score = sum(Optimized.enterprise.score)) %>% 
+      dplyr::ungroup() %>% 
+      ggplot(aes(x=Group, y=Optimized.enterprise.score, fill=Scenario)) + 
+      geom_bar(stat="identity", position='dodge', color="black") + 
       theme_half_open(12) + 
       xlab("")+
       ylab("Enterprise Score")+
-      facet_wrap(~Scenario, ncol=1)+
       #scale_fill_manual(values=c("gray","darkgreen"))+
-      theme(axis.text.x = element_text(angle = 45,hjust=1)) + 
+      theme(axis.text.x = element_text(angle = 45,hjust=1)) +
       theme(legend.position = "top", 
             legend.title = element_blank())
     
   })
   
-  output$plot.ui <- renderUI({
-    plotOutput("optimized.enterprise.comparison", height = length(names())*300 + 1)
-  })
+  # output$optimized.enterprise.comparison <- renderPlot({ 
+  #   
+  #   as.data.frame(bind_rows(optimized_enterprise(), .id = "column_label")) %>% 
+  #     dplyr::rename("Scenario" = "column_label") %>% 
+  #     dplyr::group_by(Survey, Scenario) %>% 
+  #     dplyr::summarize(Optimized.enterprise.score = sum(Optimized.enterprise.score)) %>% 
+  #     dplyr::ungroup() %>% 
+  #     ggplot(aes(x=Survey, y=Optimized.enterprise.score, fill=Scenario)) + 
+  #     geom_bar(stat="identity", position='dodge', color="black") + 
+  #     theme_half_open(12) + 
+  #     xlab("")+
+  #     ylab("Enterprise Score")+
+  #     #scale_fill_manual(values=c("gray","darkgreen"))+
+  #     theme(axis.text.x = element_text(angle = 45,hjust=1)) +
+  #     theme(legend.position = "top", 
+  #           legend.title = element_blank())
+  #   
+  # })
+  
+  # output$plot.ui <- renderUI({
+  #   plotOutput("optimized.enterprise.comparison", height = length(names())*300 + 1)
+  # })
   
 }
 
