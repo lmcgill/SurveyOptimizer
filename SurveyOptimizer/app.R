@@ -18,6 +18,8 @@ library(DT)
 library(reactable)
 library(NlcOptim)
 require(openxlsx)
+library(readxl)
+
 if(!require(shinythemes)) install.packages("shinythemes", repos = "http://cran.us.r-project.org")
 if(!require(shinyWidgets)) install.packages("shinyWidgets", repos = "http://cran.us.r-project.org")
 
@@ -203,13 +205,36 @@ ui = bootstrapPage(
                           id = "sidebar",
                           tags$h1("Compare Saved Scenarios"),
                           tags$br(),
-                          HTML(paste0("Here you can upload your saved simulation results to compare key features of each.")),
+                          HTML(paste0("Below you can upload scenarios downloaded from the 'Run the Optimizer' page. Please ensure you filename 
+                                      is descriptive enough for you to understand before uploading. Aside from changing the file name, please do not 
+                                      modify the downloaded sheet.")),
                           tags$br(),
+                          tags$br(),
+                          fileInput("first_file",
+                                    label="Scenario 1: Choose Optimized Output",
+                                    multiple = FALSE),
+                          fileInput("second_file",
+                                    label="Scenario 2: Choose Optimized Output",
+                                    multiple = FALSE),
+                          fileInput("third_file",
+                                    label="Scenario 3: Choose Optimized Output",
+                                    multiple = FALSE),
+                          fileInput("fourth_file",
+                                    label="Scenario 4: Choose Optimized Output",
+                                    multiple = FALSE),
+                          fileInput("fifth_file",
+                                    label="Scenario 5: Choose Optimized Output",
+                                    multiple = FALSE),
+                          checkboxGroupInput("datasetSelector","Data Files", choices=c("Baseline")),
 
                           width = 5
                           
                         ), 
-                        mainPanel(width = 7)
+                        mainPanel(HTML(paste0("<b>Survey Size Comparison Plot</b>")),
+                                  plotOutput("optimized.numbers.comparison", height=600), 
+                                  HTML(paste0("<b>Enterprise Score Comparison Plot</b>")),
+                                  uiOutput("plot.ui"),
+                                  width = 7)
                         )), 
              
   )
@@ -547,8 +572,8 @@ server <- function(input, output, session) {
       dplyr::summarize(Optimized.enterprise.score = sum(Optimized.enterprise.score), 
                        Current.enterprise.score = sum(Current.enterprise.score)) %>% 
       dplyr::ungroup() %>% 
-      dplyr::mutate(Optimized.enterprise.score = round(Optimized.enterprise.score, 2)) %>%
-      dplyr::mutate(Current.enterprise.score = round(Current.enterprise.score, 2)) 
+      dplyr::mutate(Optimized.enterprise.score = round(Optimized.enterprise.score, 3)) %>%
+      dplyr::mutate(Current.enterprise.score = round(Current.enterprise.score, 3)) 
     
     return(new.values)
   })
@@ -654,6 +679,9 @@ server <- function(input, output, session) {
   })
 
   
+  ##################################################################################################################################################
+  # Generating excel sheet that can be downloaded 
+  ##################################################################################################################################################
   
   output$download_btn <- downloadHandler(
     #filename = function() {paste0(input$main, " vs ", input$control, " ", input$obRange[1], "-", input$obRange[2], ".xlsx")},
@@ -668,17 +696,112 @@ server <- function(input, output, session) {
       addWorksheet(wb, sheetName = "objective_weights")
       addWorksheet(wb, sheetName = "bounds")
       addWorksheet(wb, sheetName = "totals")
+      addWorksheet(wb, sheetName = "species_valuation")
+      addWorksheet(wb, sheetName = "species_include")
       writeData(wb, data.frame(optimized.data()), sheet = "optimized_numbers")
       writeData(wb, data.frame(enterprise.score()), sheet = "enterprise_scores")
       writeData(wb, data.frame(objective.weights.new$data), sheet = "objective_weights")
       writeData(wb,  data.frame(bounds.new$data), sheet = "bounds")
       writeData(wb,  data.frame(totals.new$data), sheet = "totals")
+      writeData(wb,  data.frame(species.value.new$data), sheet = "species_valuation")
+      writeData(wb,  data.frame(species.include.new$data), sheet = "species_include")
       saveWorkbook(wb, file = fname)
       
     },
     contentType = "file/xlsx"
   )
 
+  ##################################################################################################################################################
+  # Read in data to compare across scenarios 
+  ##################################################################################################################################################
+  
+  names<-reactive({
+    files = c(input$first_file$datapath, input$second_file$datapath, input$third_file$datapath, 
+              input$fourth_file$datapath, input$fifth_file$datapath)
+    tmp <- c(substr(input$first_file$name,1,nchar(input$first_file$name)-5), 
+             substr(input$second_file$name,1,nchar(input$second_file$name)-5), 
+             substr(input$third_file$name,1,nchar(input$third_file$name)-5), 
+             substr(input$fourth_file$name,1,nchar(input$fourth_file$name)-5), 
+             substr(input$fifth_file$name,1,nchar(input$fifth_file$name)-5))
+    tmp
+    
+  })
+  
+  optimized_numbers<-reactive({
+    files = c(input$first_file$datapath, input$second_file$datapath, input$third_file$datapath, 
+              input$fourth_file$datapath, input$fifth_file$datapath)
+    tmp <- lapply(files, read_excel, sheet=1)
+    names(tmp) = names()
+    tmp
+    
+  })
+  
+  optimized_enterprise<-reactive({
+    files = c(input$first_file$datapath, input$second_file$datapath, input$third_file$datapath, 
+              input$fourth_file$datapath, input$fifth_file$datapath)
+    tmp <- lapply(files, read_excel, sheet=2)
+    names(tmp) = names()
+    tmp
+    
+  })
+  
+  observeEvent(input$first_file$name, {
+    updateCheckboxGroupInput(session,"datasetSelector", choices=c("Baseline",names()))
+  })
+  observeEvent(input$second_file$name, {
+    updateCheckboxGroupInput(session,"datasetSelector", choices=c("Baseline",names()))
+  })
+  observeEvent(input$third_file$name, {
+    updateCheckboxGroupInput(session,"datasetSelector", choices=c("Baseline",names()))
+  })
+  observeEvent(input$fourth_file$name, {
+    updateCheckboxGroupInput(session,"datasetSelector", choices=c("Baseline",names()))
+  })
+  observeEvent(input$fifth_file$name, {
+    updateCheckboxGroupInput(session,"datasetSelector", choices=c("Baseline",names()))
+  })
+  
+  ##################################################################################################################################################
+  # Generating scenario comparison plots 
+  ##################################################################################################################################################
+  
+  output$optimized.numbers.comparison <- renderPlot({ 
+    
+    as.data.frame(bind_rows(optimized_numbers(), .id = "column_label")) %>% 
+      dplyr::select(column_label, Survey, Optimized.N) %>% 
+      dplyr::rename("Scenario" = "column_label") %>% 
+      ggplot(aes(y=Optimized.N, x=Survey, fill=Scenario)) + 
+      ylab("Number") + 
+      geom_bar(stat="identity", position='dodge', color="black") + 
+      theme_half_open(12) + 
+      xlab("")+
+      theme(axis.text.x = element_text(angle = 45,hjust=1)) + 
+      theme(legend.position = "top", 
+            legend.title = element_blank())
+    
+  })
+  
+  output$optimized.enterprise.comparison <- renderPlot({ 
+    
+    as.data.frame(bind_rows(optimized_enterprise(), .id = "column_label")) %>% 
+      dplyr::rename("Scenario" = "column_label") %>% 
+      ggplot(aes(x=Survey, y=Optimized.enterprise.score, fill=Group)) + 
+      geom_bar(position="stack", stat="identity", color="black")+
+      theme_half_open(12) + 
+      xlab("")+
+      ylab("Enterprise Score")+
+      facet_wrap(~Scenario, ncol=1)+
+      #scale_fill_manual(values=c("gray","darkgreen"))+
+      theme(axis.text.x = element_text(angle = 45,hjust=1)) + 
+      theme(legend.position = "top", 
+            legend.title = element_blank())
+    
+  })
+  
+  output$plot.ui <- renderUI({
+    plotOutput("optimized.enterprise.comparison", height = length(names())*300 + 1)
+  })
+  
 }
 
 # Run the application 
