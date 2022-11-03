@@ -51,8 +51,8 @@ ui = bootstrapPage(
                           tags$h2(HTML(paste0("The <b>Survey Optimizer Model</b> allocates sampling effort 
                           across the following Gulf of Mexico fisheries surveys to maximize insights and meet management objectives:")), style={'color:#045a8d'}), 
                           tags$h4(HTML(paste0(
-                            "<ul><li>Camera/ Reef</li><li>SEAMAP Summer Trawl</li><li>SEAMAP Fall Trawl</li><li>SEAMAP Bottom Longline</li><li>SEAMAP Summer Plankton Bongo</li>
-                            <li>SEAMAP Summer Plankton Neuston</li><li>SEAMAP Fall Plankton Bongo</li><li>SEAMAP Fall Plankton Neuston</li>
+                            "<ul><li>Camera/ Reef</li><li>SEAMAP Summer Trawl</li><li>SEAMAP Fall Trawl</li><li>SEAMAP Bottom Longline</li><li>SEAMAP Summer Plankton Bongo + Neuston</li>
+                            <li>SEAMAP Fall Plankton Bongo + Neuston</li>
                             <li>NMFS Bottom Longline</li><li>NMFS Small Pelagics</li></ul>"
                           )), style={'color:#045a8d'}), #
                           width = 5
@@ -111,6 +111,13 @@ ui = bootstrapPage(
                                      tags$br(),
                                      selectInput("constraint_name", NULL, c("Survey Size","Totals"), selected = "Survey Size")                            )
                           ),
+                          
+                          tags$br(),
+                          fileInput("file1", "Upload Your Own Species Valuation:",
+                                    multiple = FALSE,
+                                    accept = c("text/csv",
+                                               "text/comma-separated-values,text/plain",
+                                               ".csv")),
                           width = 5
                         ),
                         mainPanel(
@@ -226,7 +233,7 @@ ui = bootstrapPage(
                                     label="Scenario 5: Choose Optimized Output",
                                     multiple = FALSE),
                           #checkboxGroupInput("datasetSelector","Data Files", choices=c("Baseline")),
-
+                          
                           width = 5
                           
                         ), 
@@ -236,7 +243,7 @@ ui = bootstrapPage(
                                   plotOutput("optimized.enterprise.comparison", height=600), 
                                   #uiOutput("plot.ui"),
                                   width = 7)
-                        )), 
+                      )), 
              
   )
 )
@@ -251,9 +258,9 @@ server <- function(input, output, session) {
   
   ## This will create the original upper/ lower bounds data frame that is rendered on the table to start 
   bounds = data.frame(values =c("summer_trawl", "fall_trawl", "seamap_bll", "nmfs_bll", "camera_reef", "sum_plank_bongo",
-                                "sum_plank_neuston", "fall_plank_bongo", "fall_plank_neust", "nmfs_small_pelagics"), 
-                      lower.bound =  c(0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
-                      upper.bound = c(346, 302, 160, 165, 1494, 56, 56, 72, 72, 122))
+                                "fall_plank_bongo", "nmfs_small_pelagics"), 
+                      lower.bound =  c(0, 0, 0, 0, 0, 0, 0, 0),
+                      upper.bound = c(346, 302, 160, 165, 1494, 112, 144, 122))
   
   ## This will create the original species valuation data frame that is rendered on the table to start 
   species.value = read.csv("data/species_value.csv") %>% 
@@ -265,12 +272,14 @@ server <- function(input, output, session) {
   
   ## This is %Freq_{species, survey} data - it does not change 
   species.survey.freq = read.csv("data/species_pct_frequency.csv") %>% 
-    dplyr::mutate(species = tolower(species)) 
+    dplyr::mutate(species = tolower(species)) %>% 
+    dplyr::select(species, life_stage, summer_trawl, fall_trawl, seamap_bll, nmfs_bll, camera_reef, sum_plank_bongo, 
+                  fall_plank_bongo, nmfs_small_pelagics, Group)
+  
   # Replace all NA values with 0 (NAs are the empty cells from the excel sheet)
   species.survey.freq[is.na(species.survey.freq)] = 0
   col_order <- c("Group", "species", "life_stage",
-                 "summer_trawl", "fall_trawl", "seamap_bll","nmfs_bll", "camera_reef", "sum_plank_bongo", "sum_plank_neuston", "fall_plank_bongo", 
-                 "fall_plank_neust", "nmfs_small_pelagics")
+                 "summer_trawl", "fall_trawl", "seamap_bll","nmfs_bll", "camera_reef", "sum_plank_bongo", "fall_plank_bongo", "nmfs_small_pelagics")
   species.survey.freq = species.survey.freq[, col_order]
   
   ## This will create the include species data frame
@@ -412,7 +421,7 @@ server <- function(input, output, session) {
     max.cost =  data.frame(totals.new$data)[1,2]
     max.capacity = data.frame(totals.new$data)[2,2]
     species.include.new = data.frame(species.include.new$data) 
-      
+    
     # Calculate the weighted average for each species 
     survey.value = species.value.new %>% 
       dplyr::mutate(species = tolower(species)) %>% 
@@ -428,12 +437,14 @@ server <- function(input, output, session) {
     # Open power parameter file 
     species.survey.power = read.csv("data/species_power_parameter.csv") %>% 
       dplyr::mutate(species = tolower(species)) %>% 
+      dplyr::select(species, life_stage, summer_trawl, fall_trawl, seamap_bll, nmfs_bll, camera_reef, sum_plank_bongo, 
+                    fall_plank_bongo, nmfs_small_pelagics, Group) %>% 
       gather("survey","power_param",-c(species, life_stage, Group))
     
     # Gather the include file 
     species.include.new =   species.include.new %>% 
       gather("survey","include",-c(species, life_stage, Group)) 
-
+    
     # Now we want to calculate the %Freq_{species, survey} * Value_{species}
     species.survey.freq.value = left_join(species.survey.freq, survey.value[, c("species", "life_stage","total_value")], by=c("species", "life_stage")) %>% 
       gather("survey","pct_freq",-c(species, life_stage, Group, total_value)) %>% 
@@ -455,11 +466,10 @@ server <- function(input, output, session) {
     species.survey.freq.value = frequency.data()
     
     survey.names = c("summer_trawl", "fall_trawl", "seamap_bll", "nmfs_bll", "camera_reef", "sum_plank_bongo",
-                     "sum_plank_neuston", "fall_plank_bongo", "fall_plank_neust", "nmfs_small_pelagics")
-    survey.size.current = c(315, 275, 146, 150, 1359, 51, 51, 66, 66, 111)
-    #survey.n = c(1000, 1000, 1000, 1000, 1500, 1000, 1000, 1000, 1000, 1000)-100
-    
-    cost.per.survey = c(2910, 3414, 2830, 3600, 1871, 1854, 1854, 2555, 2555, 4172)
+                     "fall_plank_bongo", "nmfs_small_pelagics")
+    survey.size.current = c(315, 275, 146, 150, 1359, 102, 132, 111)
+
+    cost.per.survey = c(2910, 3414, 2830, 3600, 1871, 1854, 2555, 4172) # Should 1871 and 1854 be combined? 
     
     ## More constraints - this time it's cost constraints. They will be inequality constraints.   
     # NOTE - I'm not sure what the difference between "cost per" and "current cost" is on the sheet 
@@ -478,7 +488,7 @@ server <- function(input, output, session) {
     obj=function(survey.n){
       
       survey.names = c("summer_trawl", "fall_trawl", "seamap_bll", "nmfs_bll", "camera_reef", "sum_plank_bongo",
-                       "sum_plank_neuston", "fall_plank_bongo", "fall_plank_neust", "nmfs_small_pelagics")
+                       "fall_plank_bongo", "nmfs_small_pelagics")
       
       constant.multiplier = 10000
       # Summer trawl 
@@ -506,46 +516,46 @@ server <- function(input, output, session) {
       sum.plank.bongo.sum = sum(species.survey.freq.value$freq_value[species.survey.freq.value$survey == survey.names[6]] * (1-sum.plank.bongo.power)* constant.multiplier)
       
       # Sum Plan Neuston 
-      sum.plan.neuston.power = (survey.n[7]^(-1 * species.survey.freq.value$power_param[species.survey.freq.value$survey == survey.names[7]]))
-      sum.plan.neuston.sum = sum(species.survey.freq.value$freq_value[species.survey.freq.value$survey == survey.names[7]] * (1-sum.plan.neuston.power)* constant.multiplier)
+      #sum.plan.neuston.power = (survey.n[7]^(-1 * species.survey.freq.value$power_param[species.survey.freq.value$survey == survey.names[7]]))
+      #sum.plan.neuston.sum = sum(species.survey.freq.value$freq_value[species.survey.freq.value$survey == survey.names[7]] * (1-sum.plan.neuston.power)* constant.multiplier)
       
       # Fall Plank Bongo
-      fall.plank.bongo.power = (survey.n[8]^(-1 * species.survey.freq.value$power_param[species.survey.freq.value$survey == survey.names[8]]))
-      fall.plank.bongo.sum = sum(species.survey.freq.value$freq_value[species.survey.freq.value$survey == survey.names[8]] * (1-fall.plank.bongo.power)* constant.multiplier)
+      fall.plank.bongo.power = (survey.n[7]^(-1 * species.survey.freq.value$power_param[species.survey.freq.value$survey == survey.names[7]]))
+      fall.plank.bongo.sum = sum(species.survey.freq.value$freq_value[species.survey.freq.value$survey == survey.names[7]] * (1-fall.plank.bongo.power)* constant.multiplier)
       
       # Fall Plank Neust
-      fall.plank.neust.power = (survey.n[9]^(-1 * species.survey.freq.value$power_param[species.survey.freq.value$survey == survey.names[9]])) 
-      fall.plank.neust.sum = sum(species.survey.freq.value$freq_value[species.survey.freq.value$survey == survey.names[9]] * (1-fall.plank.neust.power)* constant.multiplier)
+      #fall.plank.neust.power = (survey.n[9]^(-1 * species.survey.freq.value$power_param[species.survey.freq.value$survey == survey.names[9]])) 
+      #fall.plank.neust.sum = sum(species.survey.freq.value$freq_value[species.survey.freq.value$survey == survey.names[9]] * (1-fall.plank.neust.power)* constant.multiplier)
       
       # NMFS Small Pelagics 
-      nmfs.small.pelagics.power = (survey.n[10]^(-1 * species.survey.freq.value$power_param[species.survey.freq.value$survey == survey.names[10]])) 
-      nmfs.small.pelagics.sum = sum(species.survey.freq.value$freq_value[species.survey.freq.value$survey == survey.names[10]] * (1-nmfs.small.pelagics.power)* constant.multiplier) 
+      nmfs.small.pelagics.power = (survey.n[8]^(-1 * species.survey.freq.value$power_param[species.survey.freq.value$survey == survey.names[8]])) 
+      nmfs.small.pelagics.sum = sum(species.survey.freq.value$freq_value[species.survey.freq.value$survey == survey.names[8]] * (1-nmfs.small.pelagics.power)* constant.multiplier) 
       
       return(-sum(spring.trawl.sum, fall.trawl.sum, 
                   seamap.bll.sum, nmfs.bll.sum, 
                   camera.reef.sum, 
-                  sum.plank.bongo.sum, sum.plan.neuston.sum, 
-                  fall.plank.bongo.sum, fall.plank.neust.sum, 
+                  sum.plank.bongo.sum, 
+                  fall.plank.bongo.sum, 
                   nmfs.small.pelagics.sum))
       
     }
-
-    result <- solnl(X = rep(10, 10), objfun = obj, confun = con, 
+    
+    result <- NlcOptim::solnl(X = rep(10, 8), objfun = obj, confun = con, 
                     lb = lower.bound, ub = upper.bound, 
                     #tolFun = 0.000001, tolCon = 0.000001, maxnFun = 1e+08, tolX = 0.000001, maxIter = 100000)
                     tolFun = 1e-08, tolCon = 1e-08, maxnFun = 1e+08, maxIter = 8000, tolX = 1e-07)
     
     # Initial survey numbers can impact the optimizer (solnl)
     if(exists("result") == FALSE){
-      result <- solnl(X = rep(100, 10), objfun = obj, confun = con, 
+      result <- NlcOptim::solnl(X = rep(100, 8), objfun = obj, confun = con, 
                       lb = lower.bound, ub = upper.bound, 
                       tolFun = 0.000001, tolCon = 0.000001, maxnFun = 1e+08, tolX = 0.000001, maxIter = 100000)
-       
+      
     }
     
     final.table = data.frame(Survey=c("Summer Trawl","Fall Trawl","Seamap BLL", "NMFS BLL",
-                                      "Camera Reef","Summer Plankton Bongo","Summer Plankton Neust",
-                                      "Fall Plankton Bongo","Fall Plankton Neust","NMFS Small Pelagics"), 
+                                      "Camera Reef","Summer Plankton Bongo + Neuston",
+                                      "Fall Plankton Bongo + Neuston","NMFS Small Pelagics"), 
                              Optimized.N = round(result$par, digits=0), 
                              Current.N = round(survey.size.current, digits=0), 
                              Optimized.Cost = round(result$par * cost.per.survey, digits=0), 
@@ -556,7 +566,7 @@ server <- function(input, output, session) {
   
   enterprise.score <- reactive({
     survey.names = c("summer_trawl", "fall_trawl", "seamap_bll", "nmfs_bll", "camera_reef", "sum_plank_bongo",
-                     "sum_plank_neuston", "fall_plank_bongo", "fall_plank_neust", "nmfs_small_pelagics")
+                     "fall_plank_bongo", "nmfs_small_pelagics")
     
     species.survey.freq.value = frequency.data()
     final.table.n = optimized.data()
@@ -678,7 +688,7 @@ server <- function(input, output, session) {
     
     
   })
-
+  
   
   ##################################################################################################################################################
   # Generating excel sheet that can be downloaded 
@@ -686,11 +696,11 @@ server <- function(input, output, session) {
   
   output$download_btn <- downloadHandler(
     #filename = function() {paste0(input$main, " vs ", input$control, " ", input$obRange[1], "-", input$obRange[2], ".xlsx")},
-
+    
     filename = function() {paste("SOM_results_", Sys.Date(), ".xlsx", sep = "")},
     content = function(fname) {
       
-     #fname <- paste(filename,"xlsx",sep=".")
+      #fname <- paste(filename,"xlsx",sep=".")
       wb <- createWorkbook("Survey_shinyapp", "Survey results")
       addWorksheet(wb, sheetName = "optimized_numbers")
       addWorksheet(wb, sheetName = "enterprise_scores")
@@ -711,7 +721,7 @@ server <- function(input, output, session) {
     },
     contentType = "file/xlsx"
   )
-
+  
   ##################################################################################################################################################
   # Read in data to compare across scenarios 
   ##################################################################################################################################################
@@ -825,6 +835,7 @@ server <- function(input, output, session) {
   # })
   
 }
+
 
 # Run the application 
 shinyApp(ui = ui, server = server)
