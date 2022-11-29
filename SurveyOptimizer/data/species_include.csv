@@ -1,0 +1,191 @@
+Group,species,life_stage,summer_trawl,fall_trawl,seamap_bll,nmfs_bll,camera_reef,sum_plank_bongo,fall_plank_bongo,nmfs_small_pelagics
+Amberjacks,almaco jack,Adult,1,1,1,1,1,1,1,1
+Amberjacks,banded rudderfish,Adult,1,1,1,1,1,1,1,1
+Amberjacks,greater amberjack,Adult,1,1,1,1,1,1,1,1
+Amberjacks,lesser amberjack,Adult,1,1,1,1,1,1,1,1
+Coastal pelagic,cobia,Adult,1,1,1,1,1,1,1,1
+Coastal pelagic,florida pompano ,Adult,1,1,1,1,1,1,1,1
+Coastal pelagic,king mackerel,Adult,1,1,1,1,1,1,1,1
+Coastal pelagic,mullet,Adult,1,1,1,1,1,1,1,1
+Coastal pelagic,spanish mackerel,Adult,1,1,1,1,1,1,1,1
+Coastal pelagic,wahoo,Adult,1,1,1,1,1,1,1,1
+Deepwater snapper,cubera snapper,Adult,1,1,1,1,1,1,1,1
+Deepwater snapper,queen snapper,Adult,1,1,1,1,1,1,1,1
+Deepwater snapper,silk snapper,Adult,1,1,1,1,1,1,1,1
+Deepwater snapper,wenchmen,Adult,1,1,1,1,1,1,1,1
+Groundfish,atlantic croaker,Adult,1,1,1,1,1,1,1,1
+Groundfish,black drum,Adult,1,1,1,1,1,1,1,1
+Groundfish,gafftopsail catfish,Adult,1,1,1,1,1,1,1,1
+Groundfish,gulf butterfish,Adult,1,1,1,1,1,1,1,1
+Groundfish,gulf flounder,Adult,1,1,1,1,1,1,1,1
+Groundfish,red drum,Adult,1,1,1,1,1,1,1,1
+Groundfish,sand sea trout,Adult,1,1,1,1,1,1,1,1
+Groundfish,sheepshead,Adult,1,1,1,1,1,1,1,1
+Groundfish,southern flounder,Adult,1,1,1,1,1,1,1,1
+Groundfish,spotted croaker,Adult,1,1,1,1,1,1,1,1
+Groundfish,spotted sea trout,Adult,1,1,1,1,1,1,1,1
+Grouper and shallow reef fish,black grouper,Adult,1,1,1,1,1,1,1,1
+Grouper and shallow reef fish,black sea bass ,Adult,1,1,1,1,1,1,1,1
+Grouper and shallow reef fish,gag grouper,Adult,1,1,1,1,1,1,1,1
+Grouper and shallow reef fish,goliath grouper,Adult,1,1,1,1,1,1,1,1
+Grouper and shallow reef fish,grey snapper,Adult,1,1,1,1,1,1,1,1
+Grouper and shallow reef fish,grey triggerfish,Adult,1,1,1,1,1,1,1,1
+Grouper and shallow reef fish,hogfish,Adult,1,1,1,1,1,1,1,1
+Grouper and shallow reef fish,lane snapper,Adult,1,1,1,1,1,1,1,1
+Grouper and shallow reef fish,mutton snapper,Adult,1,1,1,1,1,1,1,1
+Grouper and shallow reef fish,nassau grouper,Adult,1,1,1,1,1,1,1,1
+Grouper and shallow reef fish,red grouper,Adult,1,1,1,1,1,1,1,1
+Grouper and shallow reef fish,red hind,Adult,1,1,1,1,1,1,1,1
+Grouper and shallow reef fish,red porgy ,Adult,1,1,1,1,1,1,1,1
+Grouper and shallow reef fish,red snapper,Adult,1,1,1,1,1,1,1,1
+Grouper and shallow reef fish,rock hind,Adult,1,1,1,1,1,1,1,1
+Grouper and shallow reef fish,scamp grouper,Adult,1,1,1,1,1,1,1,1
+Grouper and shallow reef fish,speckled hind ,Adult,1,1,1,1,1,1,1,1
+Grouper and shallow reef fish,vermilion snapper ,Adult,1,1,1,1,1,1,1,1
+Grouper and shallow reef fish,white grunt,Adult,1,1,1,1,1,1,1,1
+Grouper and shallow reef fish,yellowmouth grouper,Adult,1,1,1,1,1,1,1,1
+Grouper and shallow reef fish,yellowedge grouper,Adult,1,1,1,1,1,1,1,1
+Grouper and shallow reef fish,yellowfin grouper,Adult,1,1,1,1,1,1,1,1
+Grouper and shallow reef fish,yellowtail snapper ,Adult,1,1,1,1,1,1,1,1
+Large coastal sharks,blacktip,Adult,1,1,1,1,1,1,1,1
+Large coastal sharks,bull,Adult,1,1,1,1,1,1,1,1
+Large coastal sharks,lemon,Adult,1,1,1,1,1,1,1,1
+Large coastal sharks,nurse,Adult,1,1,1,1,1,1,1,1
+Large coastal sharks,sandbar,Adult,1,1,1,1,1,1,1,1
+Large coastal sharks,spinner,Adult,1,1,1,1,1,1,1,1
+Large coastal sharks,tiger,Adult,1,1,1,1,1,1,1,1
+Menhaden and baitfish,pinfish,Adult,1,1,1,1,1,1,1,1
+Menhaden and baitfish  ,anchovy,Adult,1,1,1,1,1,1,1,1
+Menhaden and baitfish  ,atlantic thread herring,Adult,1,1,1,1,1,1,1,1
+Menhaden and baitfish  ,flyingfish,Adult,1,1,1,1,1,1,1,1
+Menhaden and baitfish  ,halfbeak,Adult,1,1,1,1,1,1,1,1
+Menhaden and baitfish  ,killifish,Adult,1,1,1,1,1,1,1,1
+Menhaden and baitfish  ,menhaden,Adult,1,1,1,1,1,1,1,1
+Menhaden and baitfish  ,round herring,Adult,1,1,1,1,1,1,1,1
+Menhaden and baitfish  ,scad,Adult,1,1,1,1,1,1,1,1
+Menhaden and baitfish  ,scaled sardine,Adult,1,1,1,1,1,1,1,1
+Menhaden and baitfish  ,silverside,Adult,1,1,1,1,1,1,1,1
+Menhaden and baitfish  ,spanish sardine,Adult,1,1,1,1,1,1,1,1
+Shrimp and crabs,blue crab,Adult,1,1,1,1,1,1,1,1
+Shrimp and crabs,brown shrimp,Adult,1,1,1,1,1,1,1,1
+Shrimp and crabs,pink shrimp,Adult,1,1,1,1,1,1,1,1
+Shrimp and crabs,white shrimp,Adult,1,1,1,1,1,1,1,1
+Small pelagics,blue runner,Adult,1,1,1,1,1,1,1,1
+Small pelagics,bluefish,Adult,1,1,1,1,1,1,1,1
+Small pelagics,bonito,Adult,1,1,1,1,1,1,1,1
+Small pelagics,crevalle jack,Adult,1,1,1,1,1,1,1,1
+Small pelagics,dolphinfish,Adult,1,1,1,1,1,1,1,1
+Small pelagics,little tunny,Adult,1,1,1,1,1,1,1,1
+Small pelagics,pompan dolphinfish,Adult,1,1,1,1,1,1,1,1
+Small pelagics,rainbow runner,Adult,1,1,1,1,1,1,1,1
+Small coastal sharks,blacknose,Adult,1,1,1,1,1,1,1,1
+Small coastal sharks,bonnethead,Adult,1,1,1,1,1,1,1,1
+Small coastal sharks,finetooth,Adult,1,1,1,1,1,1,1,1
+Small coastal sharks,sharpnose,Adult,1,1,1,1,1,1,1,1
+Tilefish and deepwater grouper,blueline tilefish,Adult,1,1,1,1,1,1,1,1
+Tilefish and deepwater grouper,calico grouper,Adult,1,1,1,1,1,1,1,1
+Tilefish and deepwater grouper,golden tilefish,Adult,1,1,1,1,1,1,1,1
+Tilefish and deepwater grouper,goldface tilefish,Adult,1,1,1,1,1,1,1,1
+Tilefish and deepwater grouper,misty grouper,Adult,1,1,1,1,1,1,1,1
+Tilefish and deepwater grouper,snowy,Adult,1,1,1,1,1,1,1,1
+Tilefish and deepwater grouper,warsaw ,Adult,1,1,1,1,1,1,1,1
+Tuna,bigeye tuna,Adult,1,1,1,1,1,1,1,1
+Tuna,blackfin tuna,Adult,1,1,1,1,1,1,1,1
+Tuna,bluefin tuna,Adult,1,1,1,1,1,1,1,1
+Tuna,skipjack tuna,Adult,1,1,1,1,1,1,1,1
+Tuna,yellowfin tuna,Adult,1,1,1,1,1,1,1,1
+Amberjacks,almaco jack,Juvenille,1,1,1,1,1,1,1,1
+Amberjacks,banded rudderfish,Juvenille,1,1,1,1,1,1,1,1
+Amberjacks,greater amberjack,Juvenille,1,1,1,1,1,1,1,1
+Amberjacks,lesser amberjack,Juvenille,1,1,1,1,1,1,1,1
+Coastal pelagic,cobia,Juvenille,1,1,1,1,1,1,1,1
+Coastal pelagic,florida pompano ,Juvenille,1,1,1,1,1,1,1,1
+Coastal pelagic,king mackerel,Juvenille,1,1,1,1,1,1,1,1
+Coastal pelagic,mullet,Juvenille,1,1,1,1,1,1,1,1
+Coastal pelagic,spanish mackerel,Juvenille,1,1,1,1,1,1,1,1
+Coastal pelagic,wahoo,Juvenille,1,1,1,1,1,1,1,1
+Deepwater snapper,cubera snapper,Juvenille,1,1,1,1,1,1,1,1
+Deepwater snapper,queen snapper,Juvenille,1,1,1,1,1,1,1,1
+Deepwater snapper,silk snapper,Juvenille,1,1,1,1,1,1,1,1
+Deepwater snapper,wenchmen,Juvenille,1,1,1,1,1,1,1,1
+Groundfish,atlantic croaker,Juvenille,1,1,1,1,1,1,1,1
+Groundfish,black drum,Juvenille,1,1,1,1,1,1,1,1
+Groundfish,gafftopsail catfish,Juvenille,1,1,1,1,1,1,1,1
+Groundfish,gulf butterfish,Juvenille,1,1,1,1,1,1,1,1
+Groundfish,gulf flounder,Juvenille,1,1,1,1,1,1,1,1
+Groundfish,red drum,Juvenille,1,1,1,1,1,1,1,1
+Groundfish,sand sea trout,Juvenille,1,1,1,1,1,1,1,1
+Groundfish,sheepshead,Juvenille,1,1,1,1,1,1,1,1
+Groundfish,southern flounder,Juvenille,1,1,1,1,1,1,1,1
+Groundfish,spotted croaker,Juvenille,1,1,1,1,1,1,1,1
+Groundfish,spotted sea trout,Juvenille,1,1,1,1,1,1,1,1
+Grouper and shallow reef fish,black grouper,Juvenille,1,1,1,1,1,1,1,1
+Grouper and shallow reef fish,black sea bass ,Juvenille,1,1,1,1,1,1,1,1
+Grouper and shallow reef fish,gag grouper,Juvenille,1,1,1,1,1,1,1,1
+Grouper and shallow reef fish,goliath grouper,Juvenille,1,1,1,1,1,1,1,1
+Grouper and shallow reef fish,grey snapper,Juvenille,1,1,1,1,1,1,1,1
+Grouper and shallow reef fish,grey triggerfish,Juvenille,1,1,1,1,1,1,1,1
+Grouper and shallow reef fish,hogfish,Juvenille,1,1,1,1,1,1,1,1
+Grouper and shallow reef fish,lane snapper,Juvenille,1,1,1,1,1,1,1,1
+Grouper and shallow reef fish,mutton snapper,Juvenille,1,1,1,1,1,1,1,1
+Grouper and shallow reef fish,nassau grouper,Juvenille,1,1,1,1,1,1,1,1
+Grouper and shallow reef fish,red grouper,Juvenille,1,1,1,1,1,1,1,1
+Grouper and shallow reef fish,red hind,Juvenille,1,1,1,1,1,1,1,1
+Grouper and shallow reef fish,red porgy ,Juvenille,1,1,1,1,1,1,1,1
+Grouper and shallow reef fish,red snapper,Juvenille,1,1,1,1,1,1,1,1
+Grouper and shallow reef fish,rock hind,Juvenille,1,1,1,1,1,1,1,1
+Grouper and shallow reef fish,scamp grouper,Juvenille,1,1,1,1,1,1,1,1
+Grouper and shallow reef fish,speckled hind ,Juvenille,1,1,1,1,1,1,1,1
+Grouper and shallow reef fish,vermilion snapper ,Juvenille,1,1,1,1,1,1,1,1
+Grouper and shallow reef fish,white grunt,Juvenille,1,1,1,1,1,1,1,1
+Grouper and shallow reef fish,yellowmouth grouper,Juvenille,1,1,1,1,1,1,1,1
+Grouper and shallow reef fish,yellowedge grouper,Juvenille,1,1,1,1,1,1,1,1
+Grouper and shallow reef fish,yellowfin grouper,Juvenille,1,1,1,1,1,1,1,1
+Grouper and shallow reef fish,yellowtail snapper ,Juvenille,1,1,1,1,1,1,1,1
+Large coastal sharks,blacktip,Juvenille,1,1,1,1,1,1,1,1
+Large coastal sharks,bull,Juvenille,1,1,1,1,1,1,1,1
+Large coastal sharks,lemon,Juvenille,1,1,1,1,1,1,1,1
+Large coastal sharks,nurse,Juvenille,1,1,1,1,1,1,1,1
+Large coastal sharks,sandbar,Juvenille,1,1,1,1,1,1,1,1
+Large coastal sharks,spinner,Juvenille,1,1,1,1,1,1,1,1
+Large coastal sharks,tiger,Juvenille,1,1,1,1,1,1,1,1
+Menhaden and baitfish,pinfish,Juvenille,1,1,1,1,1,1,1,1
+Menhaden and baitfish,anchovy,Juvenille,1,1,1,1,1,1,1,1
+Menhaden and baitfish,atlantic thread herring,Juvenille,1,1,1,1,1,1,1,1
+Menhaden and baitfish,flyingfish,Juvenille,1,1,1,1,1,1,1,1
+Menhaden and baitfish,halfbeak,Juvenille,1,1,1,1,1,1,1,1
+Menhaden and baitfish,killifish,Juvenille,1,1,1,1,1,1,1,1
+Menhaden and baitfish,menhaden,Juvenille,1,1,1,1,1,1,1,1
+Menhaden and baitfish,round herring,Juvenille,1,1,1,1,1,1,1,1
+Menhaden and baitfish,scad,Juvenille,1,1,1,1,1,1,1,1
+Menhaden and baitfish,scaled sardine,Juvenille,1,1,1,1,1,1,1,1
+Menhaden and baitfish,silverside,Juvenille,1,1,1,1,1,1,1,1
+Menhaden and baitfish,spanish sardine,Juvenille,1,1,1,1,1,1,1,1
+Shrimp and crabs,blue crab,Juvenille,1,1,1,1,1,1,1,1
+Shrimp and crabs,brown shrimp,Juvenille,1,1,1,1,1,1,1,1
+Shrimp and crabs,pink shrimp,Juvenille,1,1,1,1,1,1,1,1
+Shrimp and crabs,white shrimp,Juvenille,1,1,1,1,1,1,1,1
+Small pelagics,blue runner,Juvenille,1,1,1,1,1,1,1,1
+Small pelagics,bluefish,Juvenille,1,1,1,1,1,1,1,1
+Small pelagics,bonito,Juvenille,1,1,1,1,1,1,1,1
+Small pelagics,crevalle jack,Juvenille,1,1,1,1,1,1,1,1
+Small pelagics,dolphinfish,Juvenille,1,1,1,1,1,1,1,1
+Small pelagics,little tunny,Juvenille,1,1,1,1,1,1,1,1
+Small pelagics,pompan dolphinfish,Juvenille,1,1,1,1,1,1,1,1
+Small pelagics,rainbow runner,Juvenille,1,1,1,1,1,1,1,1
+Small coastal sharks,blacknose,Juvenille,1,1,1,1,1,1,1,1
+Small coastal sharks,bonnethead,Juvenille,1,1,1,1,1,1,1,1
+Small coastal sharks,finetooth,Juvenille,1,1,1,1,1,1,1,1
+Small coastal sharks,sharpnose,Juvenille,1,1,1,1,1,1,1,1
+Tilefish and deepwater grouper,blueline tilefish,Juvenille,1,1,1,1,1,1,1,1
+Tilefish and deepwater grouper,calico grouper,Juvenille,1,1,1,1,1,1,1,1
+Tilefish and deepwater grouper,golden tilefish,Juvenille,1,1,1,1,1,1,1,1
+Tilefish and deepwater grouper,goldface tilefish,Juvenille,1,1,1,1,1,1,1,1
+Tilefish and deepwater grouper,misty grouper,Juvenille,1,1,1,1,1,1,1,1
+Tilefish and deepwater grouper,snowy,Juvenille,1,1,1,1,1,1,1,1
+Tilefish and deepwater grouper,warsaw ,Juvenille,1,1,1,1,1,1,1,1
+Tuna,bigeye tuna,Juvenille,1,1,1,1,1,1,1,1
+Tuna,blackfin tuna,Juvenille,1,1,1,1,1,1,1,1
+Tuna,bluefin tuna,Juvenille,1,1,1,1,1,1,1,1
+Tuna,skipjack tuna,Juvenille,1,1,1,1,1,1,1,1
+Tuna,yellowfin tuna,Juvenille,1,1,1,1,1,1,1,1

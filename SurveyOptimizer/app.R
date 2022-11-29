@@ -9,7 +9,6 @@
 library(shiny) 
 library(dplyr)
 library(ggplot2)
-library(raster)
 library(elastic)
 library(cowplot)
 library(tidyr)
@@ -24,18 +23,6 @@ if(!require(shinythemes)) install.packages("shinythemes", repos = "http://cran.u
 if(!require(shinyWidgets)) install.packages("shinyWidgets", repos = "http://cran.us.r-project.org")
 
 #setwd("/Users/lillianmcgill/Documents/SurveyOptimizer")
-
-render_dt = function(data, editable = 'cell', server = TRUE, ...) {
-  renderDT(data, selection = 'none', server = server, editable = editable, ...)
-}
-
-dt_output = function(title, id) {
-  fluidRow(column(
-    12, h1("Objective Weights"),
-    hr(), DTOutput(id)
-  ))
-}
-
 
 # Define UI for application that draws a histogram
 ui = bootstrapPage(
@@ -103,17 +90,25 @@ ui = bootstrapPage(
                           tabsetPanel(
                             id = "selected_tab",
                             type = "tabs",
-                            selected = "parameters",
-                            tabPanel("Parameters", value = "parameters",
-                                     tags$br(),
-                                     selectInput("parameter_name", NULL, c("Objective Criteria","Species to Include","Species Valuation"), selected = "Objective Criteria")                            ),
+                            selected = "constraints",
                             tabPanel("Constraints", value = "constraints",
                                      tags$br(),
-                                     selectInput("constraint_name", NULL, c("Survey Size","Totals"), selected = "Survey Size")                            )
+                                     selectInput("constraint_name", NULL, c("Survey Size","Totals"), selected = "Survey Size")), 
+                            tabPanel("Parameters", value = "parameters",
+                                     tags$br(),
+                                     selectInput("parameter_name", NULL, c("Objective Criteria","Species to Include","Species Valuation"), selected = "Objective Criteria")),
+                            tabPanel("Fixed Parameters", value = "fixed_parameters",
+                                     tags$br(),
+                                     selectInput("fixed_parameter_name", NULL, c("Power Parameter","Observation Frequency"), selected = "Power Parameter"))
                           ),
                           
                           tags$br(),
-                          fileInput("file1", "Upload Your Own Species Valuation:",
+                          fileInput("file1", "Upload Your Own Species Valuation File:",
+                                    multiple = FALSE,
+                                    accept = c("text/csv",
+                                               "text/comma-separated-values,text/plain",
+                                               ".csv")),
+                          fileInput("file2", "Upload Your Own Species to Include File:",
                                     multiple = FALSE,
                                     accept = c("text/csv",
                                                "text/comma-separated-values,text/plain",
@@ -144,6 +139,15 @@ ui = bootstrapPage(
                             DT::dataTableOutput('x4')
                           ),
                           
+                          conditionalPanel(
+                            condition = "input.selected_tab == 'fixed_parameters' & input.fixed_parameter_name == 'Power Parameter'",
+                            DT::dataTableOutput('x6')
+                          ),
+                          
+                          conditionalPanel(
+                            condition = "input.selected_tab == 'fixed_parameters' & input.fixed_parameter_name == 'Observation Frequency'",
+                            DT::dataTableOutput('x7')
+                          ),
                           width = 7
                           
                           
@@ -262,10 +266,6 @@ server <- function(input, output, session) {
                       lower.bound =  c(0, 0, 0, 0, 0, 0, 0, 0),
                       upper.bound = c(346, 302, 160, 165, 1494, 112, 144, 122))
   
-  ## This will create the original species valuation data frame that is rendered on the table to start 
-  species.value = read.csv("data/species_value.csv") %>% 
-    dplyr::select(-include)
-  
   ## This will create the total parameter $$ / amount 
   totals = data.frame(values = c("Total Cost","Total Survey Number"), 
                       totals = c(6866963, 2590))
@@ -282,9 +282,43 @@ server <- function(input, output, session) {
                  "summer_trawl", "fall_trawl", "seamap_bll","nmfs_bll", "camera_reef", "sum_plank_bongo", "fall_plank_bongo", "nmfs_small_pelagics")
   species.survey.freq = species.survey.freq[, col_order]
   
-  ## This will create the include species data frame
-  species.include = species.survey.freq %>% mutate_if(is.numeric, ~1 * (. > 0)) 
+  ## This will create the  species valuation data frame that is rendered on the table. If no file is uploaded, then the default will be used. 
+  species.value.new <- reactiveValues(data = NULL)
+  observeEvent(input$file1, {
+    if(is.null(input$file1) == TRUE){
+      species.val = read.csv("data/species_value.csv") %>% 
+        dplyr::select(-include)
+    }
+    else if(is.null(input$file1) == FALSE){
+      species.val <- read.csv(input$file1$datapath,
+                              header = TRUE,
+                              sep = ",",
+                              stringsAsFactors = FALSE) %>% 
+        dplyr::select(-include)
+    }
+    species.value.new$data = species.val
+    species.value.original = species.val
+    species.value = species.val
+  }, ignoreNULL = FALSE)
   
+  ## This will create the include species data frame
+  species.include.new <- reactiveValues(data = NULL)
+  observeEvent(input$file2, {
+    if(is.null(input$file2) == TRUE){
+      species.inc = read.csv("data/species_include.csv") 
+    }
+    else if(is.null(input$file2) == FALSE){
+      species.inc <- read.csv(input$file2$datapath,
+                              header = TRUE,
+                              sep = ",",
+                              stringsAsFactors = FALSE) 
+    }
+    species.include.new$data = species.inc
+    species.include.original = species.inc
+    species.include = species.inc
+  }, ignoreNULL = FALSE)
+  
+
   ##################################################################################################################################################
   # Reactive values for input 
   ##################################################################################################################################################
@@ -296,14 +330,11 @@ server <- function(input, output, session) {
   objective.weights.new <- reactiveValues(data = objective.weights)
   objective.weights.original <- objective.weights
   
-  species.value.new = reactiveValues(data=species.value)
-  species.value.original = species.value
-  
   totals.new = reactiveValues(data=totals)
   totals.original = totals
   
-  species.include.new = reactiveValues(data=species.include)
-  species.include.original = species.include
+  #species.include.new = reactiveValues(data=species.include)
+  #species.include.original = species.include
   
   # This renders the datatable on the first page
   output$x2<-renderDT(
@@ -361,8 +392,7 @@ server <- function(input, output, session) {
     if(is.numeric(cell.edit.value) == FALSE){cell.edit.value = 0}
     
     # Replace values with user input
-    species.value[input$x1_cell_edit$row,input$x1_cell_edit$col] <<- cell.edit.value
-    species.value.new$data <- species.value
+    species.value.new$data[input$x1_cell_edit$row,input$x1_cell_edit$col] <<- cell.edit.value 
   })
   
   
@@ -402,10 +432,23 @@ server <- function(input, output, session) {
     if(is.numeric(cell.edit.value) == FALSE){cell.edit.value = 0}
     
     # Replace values with user input
-    species.include[input$x5_cell_edit$row,input$x5_cell_edit$col] <<- cell.edit.value
-    species.include.new$data <- species.include
+    species.include.new$data[input$x5_cell_edit$row,input$x5_cell_edit$col] <<- cell.edit.value
   })
   
+  # This renders the datatable on the first page
+  output$x6 <- renderDT(
+    species.survey.freq,
+    editable = FALSE,
+    rownames = TRUE)
+  
+  # This renders the datatable on the first page
+  output$x7 <- renderDT(
+    read.csv("data/species_power_parameter.csv") %>% 
+      dplyr::mutate(species = tolower(species)) %>% 
+      dplyr::select(species, life_stage, summer_trawl, fall_trawl, seamap_bll, nmfs_bll, camera_reef, sum_plank_bongo, 
+                    fall_plank_bongo, nmfs_small_pelagics, Group),
+    editable = FALSE,
+    rownames = TRUE)
   
   ##################################################################################################################################################
   # Getting data/ running optimization 
@@ -804,35 +847,11 @@ server <- function(input, output, session) {
       theme_half_open(12) + 
       xlab("")+
       ylab("Enterprise Score")+
-      #scale_fill_manual(values=c("gray","darkgreen"))+
       theme(axis.text.x = element_text(angle = 45,hjust=1)) +
       theme(legend.position = "top", 
             legend.title = element_blank())
     
   })
-  
-  # output$optimized.enterprise.comparison <- renderPlot({ 
-  #   
-  #   as.data.frame(bind_rows(optimized_enterprise(), .id = "column_label")) %>% 
-  #     dplyr::rename("Scenario" = "column_label") %>% 
-  #     dplyr::group_by(Survey, Scenario) %>% 
-  #     dplyr::summarize(Optimized.enterprise.score = sum(Optimized.enterprise.score)) %>% 
-  #     dplyr::ungroup() %>% 
-  #     ggplot(aes(x=Survey, y=Optimized.enterprise.score, fill=Scenario)) + 
-  #     geom_bar(stat="identity", position='dodge', color="black") + 
-  #     theme_half_open(12) + 
-  #     xlab("")+
-  #     ylab("Enterprise Score")+
-  #     #scale_fill_manual(values=c("gray","darkgreen"))+
-  #     theme(axis.text.x = element_text(angle = 45,hjust=1)) +
-  #     theme(legend.position = "top", 
-  #           legend.title = element_blank())
-  #   
-  # })
-  
-  # output$plot.ui <- renderUI({
-  #   plotOutput("optimized.enterprise.comparison", height = length(names())*300 + 1)
-  # })
   
 }
 
