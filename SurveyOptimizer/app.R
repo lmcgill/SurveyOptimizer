@@ -141,12 +141,12 @@ ui = bootstrapPage(
                           
                           conditionalPanel(
                             condition = "input.selected_tab == 'fixed_parameters' & input.fixed_parameter_name == 'Power Parameter'",
-                            DT::dataTableOutput('x6')
+                            DT::dataTableOutput('x7')
                           ),
                           
                           conditionalPanel(
                             condition = "input.selected_tab == 'fixed_parameters' & input.fixed_parameter_name == 'Observation Frequency'",
-                            DT::dataTableOutput('x7')
+                            DT::dataTableOutput('x6')
                           ),
                           width = 7
                           
