@@ -468,7 +468,7 @@ server <- function(input, output, session) {
     survey.names = c("summer_trawl", "fall_trawl", "seamap_bll", "nmfs_bll", "camera_reef", "sum_plank_bongo",
                      "fall_plank_bongo", "nmfs_small_pelagics")
     survey.size.current = c(315, 275, 146, 150, 1359, 102, 132, 111)
-
+    
     cost.per.survey = c(2910, 3414, 2830, 3600, 1871, 1854, 2555, 4172) # Should 1871 and 1854 be combined? 
     
     ## More constraints - this time it's cost constraints. They will be inequality constraints.   
@@ -541,15 +541,15 @@ server <- function(input, output, session) {
     }
     
     result <- NlcOptim::solnl(X = rep(10, 8), objfun = obj, confun = con, 
-                    lb = lower.bound, ub = upper.bound, 
-                    #tolFun = 0.000001, tolCon = 0.000001, maxnFun = 1e+08, tolX = 0.000001, maxIter = 100000)
-                    tolFun = 1e-08, tolCon = 1e-08, maxnFun = 1e+08, maxIter = 8000, tolX = 1e-07)
+                              lb = lower.bound, ub = upper.bound, 
+                              tolFun = 0.000001, tolCon = 0.000001, maxnFun = 1e+08, tolX = 0.000001, maxIter = 100000)
+                              #tolFun = 1e-08, tolCon = 1e-08, maxnFun = 1e+08, maxIter = 8000, tolX = 1e-07)
     
     # Initial survey numbers can impact the optimizer (solnl)
     if(exists("result") == FALSE){
       result <- NlcOptim::solnl(X = rep(100, 8), objfun = obj, confun = con, 
-                      lb = lower.bound, ub = upper.bound, 
-                      tolFun = 0.000001, tolCon = 0.000001, maxnFun = 1e+08, tolX = 0.000001, maxIter = 100000)
+                                lb = lower.bound, ub = upper.bound, 
+                                tolFun = 0.000001, tolCon = 0.000001, maxnFun = 1e+08, tolX = 0.000001, maxIter = 100000)
       
     }
     
